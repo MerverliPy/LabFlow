@@ -4,10 +4,9 @@ Core LabFlow requires zero plugins and zero MCP servers.
 
 ## Allowed extension areas
 - providers
-- deployment
 - security
-- browser
-- external memory
+- deploy
+- codex
 
 ## Promotion requirements
 - owner

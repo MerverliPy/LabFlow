@@ -1,1 +1,19 @@
-{"name":"@labflow/memory","version":"0.1.0","private":true,"type":"module","scripts":{"build":"echo build-memory","typecheck":"echo typecheck-memory","test":"node src/store.mjs"}}
+{
+  "name": "@labflow/memory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --check src/store.mjs && node --check src/index.mjs",
+    "typecheck": "echo typecheck-memory",
+    "test": "node --input-type=module -e \"import('./src/index.mjs').then((m) => { const dir = m.ensureStateDir(); if (!dir.endsWith('.labflow')) process.exit(1); console.log('memory exports ok'); })\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  }
+}

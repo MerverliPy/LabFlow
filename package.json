@@ -4,14 +4,6 @@
   "private": true,
   "description": "Claude Code-native orchestration toolkit with a verified terminal-first core.",
   "packageManager": "pnpm@10.0.0",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MerverliPy/LabFlow.git"
-  },
-  "homepage": "https://labflowdevelopment.calvinbrady8.workers.dev",
-  "bugs": {
-    "url": "https://github.com/MerverliPy/LabFlow/issues"
-  },
   "engines": {
     "node": ">=20"
   },
@@ -26,18 +18,22 @@
     "generate:docs": "node tools/generate-docs.mjs",
     "check:shell": "bash scripts/check-shell.sh",
     "proof:verify": "node packages/proof-sdk/src/index.mjs verify",
-    "ci": "pnpm validate:manifest && pnpm generate:docs && pnpm check:shell",
-    "validate:cloudflare": "node tools/validate-cloudflare.mjs",
-    "worker:dev": "wrangler dev",
-    "worker:deploy": "wrangler deploy",
-    "worker:tail": "wrangler tail",
-    "worker:check": "node tools/validate-cloudflare.mjs"
+    "verify:generated-docs": "node tools/check-generated-docs.mjs",
+    "cli:help": "node packages/cli/src/index.mjs --help",
+    "ci": "pnpm validate:manifest && pnpm generate:docs && pnpm verify:generated-docs && pnpm build && pnpm test && pnpm proof:verify && pnpm check:shell",
+    "release:readiness": "node tools/release-readiness.mjs"
   },
   "devDependencies": {
     "@anthropic-ai/claude-agent-sdk": "^0.1.0",
     "@types/node": "^22.10.0",
-    "typescript": "^5.7.2",
-    "wrangler": "^4.68.0"
+    "typescript": "^5.7.2"
   },
-  "author": "LabFlowDevelopment"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  }
 }

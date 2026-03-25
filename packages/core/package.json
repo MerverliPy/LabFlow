@@ -1,1 +1,19 @@
-{"name":"@labflow/core","version":"0.1.0","private":true,"type":"module","scripts":{"build":"echo build-core","typecheck":"echo typecheck-core","test":"node -e \"console.log('core tests pending')\""}}
+{
+  "name": "@labflow/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --check src/index.mjs",
+    "typecheck": "echo typecheck-core",
+    "test": "node --input-type=module -e \"import('./src/index.mjs').then((m) => { if (!m.CORE_PHASE || !m.CORE_SCOPE || !m.findRepoRoot || !m.resolveManifest) process.exit(1); console.log('core exports ok'); })\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  }
+}

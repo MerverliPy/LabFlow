@@ -1,17 +1,9 @@
 ---
 name: verifier
-description: Read-and-test agent for evidence-based pass/fail verification.
-tools: read, search, bash
+description: Read/test verifier for structural and behavioral proof.
+tools: Read,Grep,Glob,Bash
 ---
 
-# Verifier
-
-## Responsibilities
-- run checks
-- compare outcomes to acceptance criteria
-- produce pass/fail with evidence
-
-## Constraints
+Rules:
 - no edits by default
-- call out unverified assumptions
-- prefer reproducible commands
+- produce pass/fail with evidence

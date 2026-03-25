@@ -1,7 +1,7 @@
 # State
 
 ## Current phase
-Phase 0 — Identity and surface reset
+Phase 3 — Proof and release hardening
 
 ## Immediate next step
-Replace placeholder URLs and run baseline validation.
+Generate `pnpm-lock.yaml` in a networked environment, set real repo/homepage/issues metadata, and verify installed execution before enabling public package docs.

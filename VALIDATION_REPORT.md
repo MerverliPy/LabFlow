@@ -1,11 +1,15 @@
 # Validation Report
 
-## Pass 1 — File integrity
-All required GitHub + Cloudflare scaffold files are present.
-No unresolved placeholder tokens were found.
+This file is intentionally **non-authoritative**.
 
-## Pass 2 — Structural consistency
-Identity, manifest, package metadata, Wrangler config, worker entrypoint, workflow wiring, and shell syntax are internally consistent.
+Use these live checks instead:
+- `pnpm validate:manifest`
+- `pnpm generate:docs`
+- `pnpm verify:generated-docs`
+- `pnpm build`
+- `pnpm test`
+- `pnpm proof:verify`
+- `pnpm check:shell`
+- `pnpm release:readiness`
 
-## Result
-Pack is ready for GitHub commit/push and can be cloned by Cloudflare Workers from the repo root because `wrangler.jsonc` is present at the root and points to `src/index.ts`.
+Committed validation snapshots drift. Current truth should come from generated docs, CI, proof artifacts under `verification/runs/`, and `RELEASE_READINESS.md`.

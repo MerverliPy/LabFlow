@@ -1,20 +1,24 @@
-name: proof
-
+name: Proof
 on:
-  workflow_dispatch:
   pull_request:
-
+  workflow_dispatch:
 jobs:
   proof:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Basic LabFlow proof checks
-        run: |
-          test -f config/stable-command-manifest.json
-          test -f STATE.md
-          test -f PHASE_HANDOFF.md
-          echo "Proof checks completed."
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm proof:verify
+      - run: pnpm release:readiness
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: proof-runs
+          path: verification/runs/

@@ -6,34 +6,55 @@ const wrangler = JSON.parse(fs.readFileSync("wrangler.jsonc", "utf8"));
 const workerPath = wrangler.main;
 
 const problems = [];
+const LIVE_URL = "https://labflowdevelopment.calvinbrady8.workers.dev";
+const REPO_URL = "https://github.com/MerverliPy/LabFlow.git";
+const ISSUES_URL = "https://github.com/MerverliPy/LabFlow/issues";
 
-if (wrangler.name !== "labflow") problems.push(`wrangler.name must be labflow, got ${wrangler.name}`);
-if (pkg.name !== "labflow") problems.push(`package.json name must be labflow, got ${pkg.name}`);
-if (manifest.identity.packageName !== "labflow") problems.push("manifest packageName must be labflow");
-if (!fs.existsSync(workerPath)) problems.push(`Worker entry not found: ${workerPath}`);
+if (wrangler.name !== "labflow") {
+  problems.push(`wrangler.name must be labflow, got ${wrangler.name}`);
+}
+
+if (pkg.name !== "labflow") {
+  problems.push(`package.json name must be labflow, got ${pkg.name}`);
+}
+
+if (manifest.identity.packageName !== "labflow") {
+  problems.push("manifest packageName must be labflow");
+}
+
+if (!fs.existsSync(workerPath)) {
+  problems.push(`Worker entry not found: ${workerPath}`);
+}
 
 if (pkg.repository?.url !== "git+https://github.com/MerverliPy/LabFlow.git") {
   problems.push("package repository.url mismatch");
 }
-if (pkg.homepage !== "https://labflow-starter-template.calvinbrady8.workers.dev") {
+
+if (pkg.homepage !== LIVE_URL) {
   problems.push("package homepage mismatch");
 }
-if (pkg.bugs?.url !== "https://github.com/MerverliPy/LabFlow/issues") {
+
+if (pkg.bugs?.url !== ISSUES_URL) {
   problems.push("package bugs.url mismatch");
 }
-if (manifest.identity.repoUrl !== "https://github.com/MerverliPy/LabFlow.git") {
+
+if (manifest.identity.repoUrl !== REPO_URL) {
   problems.push("manifest repoUrl mismatch");
 }
-if (manifest.identity.homepageUrl !== "https://labflow-starter-template.calvinbrady8.workers.dev") {
+
+if (manifest.identity.homepageUrl !== LIVE_URL) {
   problems.push("manifest homepageUrl mismatch");
 }
-if (manifest.identity.issuesUrl !== "https://github.com/MerverliPy/LabFlow/issues") {
+
+if (manifest.identity.issuesUrl !== ISSUES_URL) {
   problems.push("manifest issuesUrl mismatch");
 }
 
 if (problems.length) {
   console.error("Cloudflare validation failed:");
-  for (const problem of problems) console.error(`- ${problem}`);
+  for (const problem of problems) {
+    console.error(`- ${problem}`);
+  }
   process.exit(1);
 }
 

@@ -1,51 +1,26 @@
-name: ci
-
+name: CI
 on:
-  push:
-    branches:
-      - main
   pull_request:
-
+  push:
+    branches: [main]
 jobs:
   validate:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Show required repo files
-        run: |
-          test -f package.json
-          test -f wrangler.jsonc
-          test -f src/index.ts
-          test -f config/stable-command-manifest.json
-          test -f tools/validate-manifest.mjs
-          test -f tools/generate-docs.mjs
-
-      - name: Install dependencies
-        run: |
-          if [ -f pnpm-lock.yaml ]; then
-            corepack enable
-            pnpm install --frozen-lockfile
-          else
-            npm install
-          fi
-        continue-on-error: true
-
-      - name: Validate manifest
-        run: node tools/validate-manifest.mjs
-
-      - name: Validate Cloudflare config
-        run: node tools/validate-cloudflare.mjs
-
-      - name: Generate docs
-        run: node tools/generate-docs.mjs
-
-      - name: Check shell scripts
-        run: bash scripts/check-shell.sh
+          cache: pnpm
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm validate:manifest
+      - run: pnpm generate:docs
+      - run: pnpm verify:generated-docs
+      - run: pnpm build
+      - run: pnpm test
+      - run: pnpm proof:verify
+      - run: pnpm check:shell
+      - run: pnpm release:readiness

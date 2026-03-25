@@ -15,15 +15,16 @@
 - wire real state to status and doctor
 - add smoke tests
 
-## Phase 3 — Proof harness
-- wire TypeScript proof commands
-- add claim-sync checks
-- capture replay artifacts for failures
+## Phase 3 — Proof and release hardening
+- capture replayable proof artifacts and snapshots
+- add state-contract documentation and schema handling
+- add release-readiness reporting
+- add failure-path checks and machine-readable status output
 
 ## Phase 4 — Session hygiene and worktrees
 - finalize handoff flow
 - worktree review and verification skills
 
 ## Phase 5 — Optional extensions
-- keep providers/deploy/security/browser isolated
+- keep providers/deploy/security/codex isolated
 - require proof before promotion

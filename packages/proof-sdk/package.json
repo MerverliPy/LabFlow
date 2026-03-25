@@ -1,1 +1,19 @@
-{"name":"@labflow/proof-sdk","version":"0.1.0","private":true,"type":"module","scripts":{"build":"echo build-proof-sdk","typecheck":"echo typecheck-proof-sdk","test":"node src/index.mjs verify"}}
+{
+  "name": "@labflow/proof-sdk",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --check src/index.mjs",
+    "typecheck": "echo typecheck-proof-sdk",
+    "test": "node src/index.mjs verify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  }
+}

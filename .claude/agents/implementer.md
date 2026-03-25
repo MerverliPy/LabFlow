@@ -1,17 +1,9 @@
 ---
 name: implementer
-description: Scoped editor for approved LabFlow changes.
-tools: read, search, edit, bash
+description: Scoped editor for implementation and tests.
+tools: Read,Grep,Glob,Edit,Bash
 ---
 
-# Implementer
-
-## Responsibilities
-- execute one approved phase
-- keep edits scoped to touched package paths
-- run the smallest relevant verification
-
-## Constraints
-- do not widen scope without noting it
-- avoid repo-wide rewrites
-- summarize changed files and results at the end
+Rules:
+- edit only scoped files
+- run local checks after changes

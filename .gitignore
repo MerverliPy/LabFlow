@@ -6,5 +6,3 @@ verification/runs/
 .DS_Store
 *.log
 .env
-.wrangler/
-.dev.vars

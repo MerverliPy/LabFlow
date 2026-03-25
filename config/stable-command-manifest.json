@@ -3,8 +3,8 @@
     "productName": "LabFlow",
     "packageName": "labflow",
     "cliName": "labflow",
-    "repoUrl": "https://github.com/MerverliPy/LabFlow.git",
-    "homepageUrl": "https://labflowdevelopment.calvinbrady8.workers.dev",
+    "repoUrl": "https://github.com/MerverliPy/LabFlow",
+    "homepageUrl": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
     "issuesUrl": "https://github.com/MerverliPy/LabFlow/issues"
   },
   "stableCommands": [
@@ -15,6 +15,22 @@
     "status",
     "doctor"
   ],
+  "commandStatus": {
+    "init": "implemented",
+    "task": "implemented-minimal",
+    "session": "implemented-minimal",
+    "memory": "implemented-minimal",
+    "status": "implemented",
+    "doctor": "implemented"
+  },
+  "commandSummary": {
+    "init": "bootstrap or repair .labflow workspace state files in the current directory",
+    "task": "add, list, show, complete, reopen, and remove lightweight workspace tasks",
+    "session": "start, inspect, replace, and close the active workspace session",
+    "memory": "append tagged notes and inspect workspace memory state",
+    "status": "report workspace state, schema health, and proof visibility with optional json",
+    "doctor": "print canonical identity, environment basics, and detect known legacy binaries"
+  },
   "experimentalAreas": [
     "providers",
     "security",

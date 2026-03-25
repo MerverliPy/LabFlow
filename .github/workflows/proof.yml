@@ -7,11 +7,14 @@ on:
 jobs:
   proof:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Basic LabFlow proof checks
         run: |
-          test -f verification/stable-command-manifest.json || test -f config/stable-command-manifest.json || true
+          test -f config/stable-command-manifest.json
           test -f STATE.md
           test -f PHASE_HANDOFF.md
           echo "Proof checks completed."

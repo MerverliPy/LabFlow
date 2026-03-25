@@ -2,14 +2,18 @@ name: cloudflare-config
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
 
 jobs:
   wrangler-config:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Verify Cloudflare files exist
         run: |
           test -f wrangler.jsonc

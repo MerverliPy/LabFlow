@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const root = process.cwd();
+const manifest = JSON.parse(fs.readFileSync(path.join(root, 'config', 'stable-command-manifest.json'), 'utf8'));
+const stable = manifest.stableCommands.map((c) => '- `' + c + '`').join('\n');
+const experimental = manifest.experimentalAreas.map((c) => '- ' + c).join('\n');
+const parked = manifest.parkedAreas.map((c) => '- ' + c).join('\n');
+fs.writeFileSync(path.join(root, 'docs', 'generated', 'README.stable-core.md'), '# Stable Core\n\n' + stable + '\n');
+fs.writeFileSync(path.join(root, 'docs', 'generated', 'README.support-matrix.md'), '# Support Matrix\n\n## Stable\n' + stable + '\n\n## Experimental\n' + experimental + '\n\n## Parked\n' + parked + '\n');
+console.log('generated docs updated');

@@ -1,0 +1,1 @@
+{"name":"@labflow/proof-sdk","version":"0.1.0","private":true,"type":"module","scripts":{"build":"echo build-proof-sdk","typecheck":"echo typecheck-proof-sdk","test":"node src/index.mjs verify"}}

@@ -1,0 +1,12 @@
+{
+  "name": "@labflow/cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": { "labflow": "./src/index.mjs" },
+  "scripts": {
+    "build": "echo build-cli",
+    "typecheck": "echo typecheck-cli",
+    "test": "node src/index.mjs --help"
+  }
+}

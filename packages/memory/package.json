@@ -1,0 +1,1 @@
+{"name":"@labflow/memory","version":"0.1.0","private":true,"type":"module","scripts":{"build":"echo build-memory","typecheck":"echo typecheck-memory","test":"node src/store.mjs"}}

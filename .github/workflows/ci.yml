@@ -2,23 +2,33 @@ name: ci
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
 
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Show repo files
+
+      - name: Show required repo files
         run: |
           test -f package.json
           test -f wrangler.jsonc
           test -f src/index.ts
-      - name: Optional install
+          test -f config/stable-command-manifest.json
+          test -f tools/validate-manifest.mjs
+          test -f tools/generate-docs.mjs
+
+      - name: Install dependencies
         run: |
           if [ -f pnpm-lock.yaml ]; then
             corepack enable
@@ -27,3 +37,15 @@ jobs:
             npm install
           fi
         continue-on-error: true
+
+      - name: Validate manifest
+        run: node tools/validate-manifest.mjs
+
+      - name: Validate Cloudflare config
+        run: node tools/validate-cloudflare.mjs
+
+      - name: Generate docs
+        run: node tools/generate-docs.mjs
+
+      - name: Check shell scripts
+        run: bash scripts/check-shell.sh

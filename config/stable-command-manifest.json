@@ -1,0 +1,45 @@
+{
+  "identity": {
+    "productName": "LabFlow",
+    "packageName": "labflow",
+    "cliName": "labflow",
+    "repoUrl": "https://github.com/MerverliPy/LabFlow.git",
+    "homepageUrl": "https://labflow-starter-template.calvinbrady8.workers.dev",
+    "issuesUrl": "https://github.com/MerverliPy/LabFlow/issues"
+  },
+  "stableCommands": [
+    "init",
+    "task",
+    "session",
+    "memory",
+    "status",
+    "doctor"
+  ],
+  "experimentalAreas": [
+    "providers",
+    "security",
+    "deploy",
+    "codex"
+  ],
+  "parkedAreas": [
+    "swarm",
+    "neural",
+    "learn",
+    "giant agent catalogs"
+  ],
+  "skills": [
+    "phase-plan",
+    "phase-work",
+    "phase-verify",
+    "handoff",
+    "phase-close",
+    "resume-latest",
+    "review-worktree",
+    "verify-worktree"
+  ],
+  "subagents": [
+    "repo-architect",
+    "implementer",
+    "verifier"
+  ]
+}

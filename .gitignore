@@ -6,3 +6,5 @@ verification/runs/
 .DS_Store
 *.log
 .env
+
+labflow-*.tgz

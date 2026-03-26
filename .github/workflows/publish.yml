@@ -1,9 +1,12 @@
 name: Publish
 
 on:
-  release:
-    types: [published]
   workflow_dispatch:
+    inputs:
+      confirm_publish:
+        description: "Type YES to publish"
+        required: true
+        default: "NO"
 
 permissions:
   contents: read
@@ -11,6 +14,7 @@ permissions:
 
 jobs:
   publish:
+    if: ${{ inputs.confirm_publish == 'YES' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -25,9 +29,18 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
           registry-url: https://registry.npmjs.org
+
+      - name: Upgrade npm for trusted publishing
+        run: npm install -g npm@11
+
+      - name: Show tool versions
+        run: |
+          node --version
+          npm --version
+          pnpm --version
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -50,8 +63,8 @@ jobs:
       - name: Proof verify
         run: pnpm proof:verify
 
-      - name: Check shell scripts
+      - name: Check shell
         run: pnpm check:shell
 
-      - name: Publish to npm
-        run: npm publish --provenance
+      - name: Publish to npm with trusted publishing
+        run: npm publish

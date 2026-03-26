@@ -1,7 +1,7 @@
 {
   "name": "labflow",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "packageManager": "pnpm@10.0.0",
   "engines": {
     "node": ">=20"
@@ -10,9 +10,10 @@
     "packages/*"
   ],
   "bin": {
-    "labflow": "./packages/cli/src/index.mjs"
+    "labflow": "bin/labflow.mjs"
   },
   "files": [
+    "bin",
     "packages/cli/src",
     "packages/core/src",
     "packages/memory/src",

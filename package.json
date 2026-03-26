@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "tsc --noEmit",
     "test": "pnpm -r test",
     "validate:manifest": "node tools/validate-manifest.mjs",
     "generate:docs": "node tools/generate-docs.mjs",
@@ -31,7 +31,7 @@
     "proof:verify": "node packages/proof-sdk/src/index.mjs verify",
     "verify:generated-docs": "node tools/check-generated-docs.mjs",
     "cli:help": "node packages/cli/src/index.mjs --help",
-    "ci": "pnpm validate:manifest && pnpm generate:docs && pnpm verify:generated-docs && pnpm build && pnpm test && pnpm proof:verify && pnpm check:shell",
+    "ci": "pnpm validate:manifest && pnpm generate:docs && pnpm verify:generated-docs && pnpm build && pnpm typecheck && pnpm test && pnpm proof:verify && pnpm check:shell",
     "release:readiness": "node tools/release-readiness.mjs"
   },
   "devDependencies": {

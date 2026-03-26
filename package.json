@@ -1,51 +1,14 @@
 {
-  "name": "labflow",
-  "version": "0.1.3",
-  "private": false,
-  "packageManager": "pnpm@10.0.0",
-  "engines": {
-    "node": ">=20"
-  },
-  "workspaces": [
-    "packages/*"
-  ],
-  "bin": {
-    "labflow": "bin/labflow.mjs"
-  },
-  "files": [
-    "bin",
-    "packages/cli/src",
-    "packages/core/src",
-    "packages/memory/src",
-    "config",
-    "README.md",
-    "LICENSE"
-  ],
+  "name": "labflow-repo-homepage",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
   "scripts": {
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
-    "validate:manifest": "node tools/validate-manifest.mjs",
-    "generate:docs": "node tools/generate-docs.mjs",
-    "check:shell": "bash scripts/check-shell.sh",
-    "proof:verify": "node packages/proof-sdk/src/index.mjs verify",
-    "verify:generated-docs": "node tools/check-generated-docs.mjs",
-    "cli:help": "node packages/cli/src/index.mjs --help",
-    "ci": "pnpm validate:manifest && pnpm generate:docs && pnpm verify:generated-docs && pnpm build && pnpm test && pnpm proof:verify && pnpm check:shell",
-    "release:readiness": "node tools/release-readiness.mjs"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.0",
-    "@types/node": "^22.10.0",
-    "typescript": "^5.7.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MerverliPy/LabFlow.git"
-  },
-  "bugs": {
-    "url": "https://github.com/MerverliPy/LabFlow/issues"
-  },
-  "description": "Claude Code-native orchestration toolkit with a verified terminal-first core.",
-  "homepage": "https://github.com/MerverliPy/LabFlow"
+    "vite": "^7.1.0"
+  }
 }

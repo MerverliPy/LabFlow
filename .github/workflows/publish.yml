@@ -54,4 +54,4 @@ jobs:
         run: pnpm check:shell
 
       - name: Publish to npm
-        run: npm publish --provenance --access public
+        run: npm publish --provenance

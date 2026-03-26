@@ -1,5 +1,5 @@
 {
-  "name": "@merverli/labflow",
+  "name": "labflow",
   "version": "0.1.1",
   "private": false,
   "packageManager": "pnpm@10.0.0",
@@ -21,9 +21,6 @@
     "README.md",
     "LICENSE"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "pnpm -r build",
     "typecheck": "pnpm -r typecheck",

@@ -2,12 +2,14 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  validate:
+  ci:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,17 +41,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-      - run: npm pack
-
-      - name: Verify packed install
-        run: |
-          TMP_DIR="$(mktemp -d)"
-          cd "$TMP_DIR"
-          npm init -y
-          npm install "$GITHUB_WORKSPACE"/labflow-*.tgz
-          npx --no-install labflow --help
-          npx --no-install labflow doctor
-          npx --no-install labflow status --json
 
       - name: Test
         run: pnpm test
@@ -59,3 +50,19 @@ jobs:
 
       - name: Check shell scripts
         run: pnpm check:shell
+
+      - name: Release readiness
+        run: pnpm release:readiness
+
+      - name: Pack npm tarball
+        run: npm pack
+
+      - name: Verify packed install
+        run: |
+          TMP_DIR="$(mktemp -d)"
+          cd "$TMP_DIR"
+          npm init -y
+          npm install "$GITHUB_WORKSPACE"/labflow-*.tgz
+          npx --no-install labflow --help
+          npx --no-install labflow doctor --json
+          npx --no-install labflow status --json

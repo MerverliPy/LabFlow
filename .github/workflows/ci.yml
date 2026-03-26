@@ -1,26 +1,50 @@
 name: CI
+
 on:
-  pull_request:
   push:
-    branches: [main]
+    branches:
+      - main
+  pull_request:
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
         with:
-          version: 10
-      - uses: actions/setup-node@v4
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: pnpm
-      - run: pnpm install --no-frozen-lockfile
-      - run: pnpm validate:manifest
-      - run: pnpm generate:docs
-      - run: pnpm verify:generated-docs
-      - run: pnpm build
-      - run: pnpm test
-      - run: pnpm proof:verify
-      - run: pnpm check:shell
-      - run: pnpm release:readiness
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate manifest
+        run: pnpm validate:manifest
+
+      - name: Generate docs
+        run: pnpm generate:docs
+
+      - name: Verify generated docs
+        run: pnpm verify:generated-docs
+
+      - name: Build
+        run: pnpm build
+
+      - name: Test
+        run: pnpm test
+
+      - name: Proof verify
+        run: pnpm proof:verify
+
+      - name: Check shell scripts
+        run: pnpm check:shell

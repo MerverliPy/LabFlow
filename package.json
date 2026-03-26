@@ -2,7 +2,6 @@
   "name": "labflow",
   "version": "0.1.0",
   "private": true,
-  "description": "Claude Code-native orchestration toolkit with a verified terminal-first core.",
   "packageManager": "pnpm@10.0.0",
   "engines": {
     "node": ">=20"
@@ -32,8 +31,9 @@
     "type": "git",
     "url": "git+https://github.com/MerverliPy/LabFlow.git"
   },
-  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
   "bugs": {
     "url": "https://github.com/MerverliPy/LabFlow/issues"
-  }
+  },
+  "description": "Claude Code-native orchestration toolkit with a verified terminal-first core.",
+  "homepage": "https://github.com/MerverliPy/LabFlow"
 }

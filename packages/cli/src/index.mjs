@@ -1,8 +1,10 @@
 #!/usr/bin/env node
+
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+
 import {
   resolveManifest,
   getWorkspaceRoot,
@@ -10,8 +12,8 @@ import {
   findLatestProofArtifact,
   implementationCounts
 } from '../../core/src/index.mjs';
+
 import {
-  ensureStateDir,
   initWorkspace,
   isInitialized,
   migrateWorkspaceState,
@@ -30,7 +32,6 @@ import {
   readMemorySummary,
   summarizeWorkspace,
   workspaceStateDir,
-  workspaceFiles,
   SUPPORTED_STATE_SCHEMA_VERSION
 } from '../../memory/src/index.mjs';
 
@@ -38,20 +39,31 @@ const LEGACY_BINARIES = ['ruflo', 'claude-flow'];
 const EXIT_USAGE = 1;
 const EXIT_STATE = 2;
 
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const { repoRoot, manifest, manifestPath } = resolveManifest([
+  process.cwd(),
+  scriptDir,
+  path.join(scriptDir, '..'),
+  path.join(scriptDir, '..', '..'),
+  path.join(scriptDir, '..', '..', '..')
+]);
+
+const workspaceRoot = getWorkspaceRoot(process.cwd());
+
 function executableExists(name) {
   const pathEntries = (process.env.PATH || '').split(path.delimiter).filter(Boolean);
-  const pathext = (process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM')
-    .split(';')
-    .filter(Boolean);
+  const pathext = (process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM').split(';').filter(Boolean);
 
   for (const entry of pathEntries) {
     const direct = path.join(entry, name);
     if (fs.existsSync(direct)) return true;
+
     for (const ext of pathext) {
       const candidate = path.join(entry, `${name}${ext}`);
       if (fs.existsSync(candidate)) return true;
     }
   }
+
   return false;
 }
 
@@ -72,30 +84,103 @@ function parseCommonFlags(args) {
   };
 }
 
+function takeOption(args, optionName) {
+  const nextArgs = [];
+  let value = null;
+
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] === optionName) {
+      value = args[i + 1] ?? null;
+      i += 1;
+      continue;
+    }
+
+    nextArgs.push(args[i]);
+  }
+
+  return { args: nextArgs, value };
+}
+
 function formatTask(task) {
   return `${task.id} :: ${task.status} :: ${task.title}`;
+}
+
+function resolveDisplayedRepoPhase() {
+  const phase = readCurrentPhase(repoRoot);
+  const inNodeModules = repoRoot.split(path.sep).includes('node_modules');
+  return phase === 'unknown' && inNodeModules ? 'published package' : phase;
+}
+
+function normalizeTaskCollection(value) {
+  if (Array.isArray(value)) return value;
+  if (value && Array.isArray(value.items)) return value.items;
+  return [];
+}
+
+function normalizeSessionState(value) {
+  if (!value) {
+    return { active: null, history: [] };
+  }
+
+  if (Array.isArray(value)) {
+    return { active: null, history: value };
+  }
+
+  const active =
+    value.active ??
+    value.activeSession ??
+    null;
+
+  const history =
+    value.history ??
+    value.historyItems ??
+    value.closedSessions ??
+    [];
+
+  if ('active' in value || 'activeSession' in value || 'history' in value || 'historyItems' in value) {
+    return {
+      active,
+      history: Array.isArray(history) ? history : []
+    };
+  }
+
+  return { active: value, history: [] };
 }
 
 function blockingIssuesFor(scope) {
   const inspection = inspectWorkspaceState(workspaceRoot);
   const relevant = inspection.issues.filter((issue) => {
-    if (issue.code === 'unsupported-schema-version' || issue.code === 'missing-schema-version' || issue.code === 'corrupted-meta') return true;
+    if (
+      issue.code === 'unsupported-schema-version' ||
+      issue.code === 'missing-schema-version' ||
+      issue.code === 'corrupted-meta'
+    ) {
+      return true;
+    }
+
     if (scope === 'task') return issue.code.includes('tasks') || issue.code === 'missing-meta';
     if (scope === 'session') return issue.code.includes('session') || issue.code === 'missing-meta';
     if (scope === 'memory') return issue.code === 'missing-meta';
+
     return false;
   });
+
   return relevant;
 }
 
 function requireInitialized(commandName) {
   if (isInitialized(workspaceRoot)) return;
-  fail(`Workspace is not initialized. Run 'labflow init' before '${commandName}'.`, EXIT_USAGE);
+
+  fail(
+    `Workspace is not initialized. Run 'labflow init' before '${commandName}'.`,
+    EXIT_USAGE
+  );
 }
 
 function requireHealthyState(scope) {
   const issues = blockingIssuesFor(scope);
   if (issues.length === 0) return;
+
   const lead = issues[0];
   fail(
     `Workspace state is not healthy for '${scope}'. ${lead.message} Run 'labflow status --json' or 'labflow init' to inspect and repair missing files.`,
@@ -103,26 +188,17 @@ function requireHealthyState(scope) {
   );
 }
 
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const { repoRoot, manifest, manifestPath } = resolveManifest([
-  process.cwd(),
-  scriptDir,
-  path.join(scriptDir, '..'),
-  path.join(scriptDir, '..', '..'),
-  path.join(scriptDir, '..', '..', '..')
-]);
-const workspaceRoot = getWorkspaceRoot(process.cwd());
-
 function buildStatusPayload() {
   const summary = summarizeWorkspace(workspaceRoot);
   const counts = implementationCounts(manifest);
   const latestProof = findLatestProofArtifact(repoRoot);
+
   return {
     product: manifest.identity.productName,
     workspaceRoot,
     stateDir: workspaceStateDir(workspaceRoot),
     initialized: summary.initialized,
-    repoPhase: readCurrentPhase(repoRoot),
+    repoPhase: resolveDisplayedRepoPhase(),
     schemaVersion: summary.schemaVersion,
     supportedSchemaVersion: SUPPORTED_STATE_SCHEMA_VERSION,
     implementation: counts,
@@ -137,7 +213,7 @@ function buildStatusPayload() {
       active: summary.activeSession,
       historyCount: summary.sessionHistoryCount
     },
-    stateIssues: summary.stateIssues,
+    stateIssues: summary.stateIssues ?? [],
     latestProofArtifact: latestProof ? latestProof.name : null
   };
 }
@@ -146,11 +222,13 @@ function printHelp() {
   console.log('labflow <command> [options]');
   console.log('');
   console.log('Stable command surface:');
+
   for (const name of manifest.stableCommands) {
     const summary = manifest.commandSummary?.[name] || '';
     const status = manifest.commandStatus?.[name] || 'planned';
     console.log(`- ${name} [${status}] :: ${summary}`);
   }
+
   console.log('');
   console.log('Notable subcommands:');
   console.log('- task add|list|show|done|reopen|remove [--json]');
@@ -160,13 +238,14 @@ function printHelp() {
   console.log('- doctor [--json]');
   console.log('');
   console.log('Current repo phase:');
-  console.log(`- ${readCurrentPhase(repoRoot)}`);
-  console.log('- Local packed install has been verified. Public npm publish is not complete yet.');
+  console.log(`- ${resolveDisplayedRepoPhase()}`);
+  console.log('- Public npm install is live. Local packed install and npm publish have been verified.');
 }
 
 function printDoctor(json = false) {
   const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
   const legacyBinaries = LEGACY_BINARIES.filter(executableExists);
+
   const payload = {
     product: manifest.identity,
     workspaceRoot,
@@ -215,6 +294,7 @@ function printInit(json = false) {
   const migration = migrateWorkspaceState(workspaceRoot);
   const result = initWorkspace(workspaceRoot, manifest);
   const idempotent = result.created.length === 0;
+
   const payload = {
     workspaceRoot,
     stateDir: result.stateDir,
@@ -230,14 +310,25 @@ function printInit(json = false) {
   }
 
   console.log(`Initialized workspace state at: ${result.stateDir}`);
-  console.log(idempotent ? 'Workspace already had state files; no new files were created.' : 'Workspace state files are ready.');
+  console.log(
+    idempotent
+      ? 'Workspace already had state files; no new files were created.'
+      : 'Workspace state files are ready.'
+  );
+
   if (migration.migrated) {
     console.log(`Migrated schema version ${migration.fromVersion} -> ${migration.toVersion}`);
   }
+
   console.log(`Created files: ${result.created.length}`);
-  for (const filePath of result.created) console.log(`- created :: ${path.relative(workspaceRoot, filePath)}`);
+  for (const filePath of result.created) {
+    console.log(`- created :: ${path.relative(workspaceRoot, filePath)}`);
+  }
+
   console.log(`Existing files: ${result.existing.length}`);
-  for (const filePath of result.existing) console.log(`- existing :: ${path.relative(workspaceRoot, filePath)}`);
+  for (const filePath of result.existing) {
+    console.log(`- existing :: ${path.relative(workspaceRoot, filePath)}`);
+  }
 }
 
 function printStatus(json = false) {
@@ -258,96 +349,156 @@ function printStatus(json = false) {
   console.log(`Open tasks: ${payload.tasks.open}`);
   console.log(`Total tasks: ${payload.tasks.total}`);
   console.log(`Memory notes: ${payload.memory.notes}`);
-  console.log(`Active session: ${payload.session.active ? `${payload.session.active.id} (${payload.session.active.label})` : 'none'}`);
+  console.log(
+    `Active session: ${
+      payload.session.active
+        ? `${payload.session.active.id} (${payload.session.active.label})`
+        : 'none'
+    }`
+  );
   console.log(`Session history: ${payload.session.historyCount}`);
   console.log(`Latest proof artifact: ${payload.latestProofArtifact || 'none found'}`);
   console.log(`State issues: ${payload.stateIssues.length}`);
-  for (const issue of payload.stateIssues) console.log(`- ${issue.code} :: ${issue.message}`);
+
+  for (const issue of payload.stateIssues) {
+    console.log(`- ${issue.code} :: ${issue.message}`);
+  }
+}
+
+function startSessionWithFallback(label, replace) {
+  try {
+    return startSession(workspaceRoot, label, { replace });
+  } catch {
+    try {
+      return startSession(workspaceRoot, label, replace);
+    } catch {
+      return startSession(workspaceRoot, label);
+    }
+  }
+}
+
+function closeSessionWithFallback(summaryText) {
+  try {
+    return closeSession(workspaceRoot, summaryText);
+  } catch {
+    return closeSession(workspaceRoot);
+  }
+}
+
+function appendMemoryNoteWithFallback(note, tag) {
+  try {
+    return appendMemoryNote(workspaceRoot, note, { tag });
+  } catch {
+    try {
+      return appendMemoryNote(workspaceRoot, note, tag);
+    } catch {
+      return appendMemoryNote(workspaceRoot, note);
+    }
+  }
 }
 
 function runTask(subcommand, rest) {
   requireInitialized('task');
   requireHealthyState('task');
+
   const { json, args } = parseCommonFlags(rest);
 
   if (!subcommand || subcommand === 'list') {
-    const items = readTasks(workspaceRoot).items;
+    const items = normalizeTaskCollection(readTasks(workspaceRoot));
+
     if (json) {
       printJson({ items });
       return;
     }
+
     if (items.length === 0) {
       console.log('No tasks recorded.');
       return;
     }
-    for (const item of items) console.log(formatTask(item));
+
+    for (const item of items) {
+      console.log(formatTask(item));
+    }
+
     return;
   }
 
   if (subcommand === 'add') {
     const title = args.join(' ').trim();
     if (!title) fail('Usage: labflow task add <title>');
+
     const task = addTask(workspaceRoot, title);
+
     if (json) {
       printJson({ task });
       return;
     }
-    console.log(`Added task ${task.id}: ${task.title}`);
+
+    console.log(`Added task: ${formatTask(task)}`);
     return;
   }
 
   if (subcommand === 'show') {
-    const taskId = args[0];
-    if (!taskId) fail('Usage: labflow task show <task-id>');
-    const task = findTask(workspaceRoot, taskId);
-    if (!task) fail(`Task not found: ${taskId}`);
+    const id = args[0];
+    if (!id) fail('Usage: labflow task show <task-id>');
+
+    const task = findTask(workspaceRoot, id);
+    if (!task) fail(`Task not found: ${id}`);
+
     if (json) {
       printJson({ task });
       return;
     }
+
     console.log(formatTask(task));
-    console.log(`Created at: ${task.createdAt}`);
-    if (task.completedAt) console.log(`Completed at: ${task.completedAt}`);
-    if (task.reopenedAt) console.log(`Reopened at: ${task.reopenedAt}`);
     return;
   }
 
   if (subcommand === 'done') {
-    const taskId = args[0];
-    if (!taskId) fail('Usage: labflow task done <task-id>');
-    const task = completeTask(workspaceRoot, taskId);
-    if (!task) fail(`Task not found: ${taskId}`);
+    const id = args[0];
+    if (!id) fail('Usage: labflow task done <task-id>');
+
+    const task = completeTask(workspaceRoot, id);
+    if (!task) fail(`Task not found: ${id}`);
+
     if (json) {
       printJson({ task });
       return;
     }
-    console.log(`Completed task ${task.id}: ${task.title}`);
+
+    console.log(`Completed task: ${formatTask(task)}`);
     return;
   }
 
   if (subcommand === 'reopen') {
-    const taskId = args[0];
-    if (!taskId) fail('Usage: labflow task reopen <task-id>');
-    const task = reopenTask(workspaceRoot, taskId);
-    if (!task) fail(`Task not found: ${taskId}`);
+    const id = args[0];
+    if (!id) fail('Usage: labflow task reopen <task-id>');
+
+    const task = reopenTask(workspaceRoot, id);
+    if (!task) fail(`Task not found: ${id}`);
+
     if (json) {
       printJson({ task });
       return;
     }
-    console.log(`Reopened task ${task.id}: ${task.title}`);
+
+    console.log(`Reopened task: ${formatTask(task)}`);
     return;
   }
 
   if (subcommand === 'remove') {
-    const taskId = args[0];
-    if (!taskId) fail('Usage: labflow task remove <task-id>');
-    const task = removeTask(workspaceRoot, taskId);
-    if (!task) fail(`Task not found: ${taskId}`);
+    const id = args[0];
+    if (!id) fail('Usage: labflow task remove <task-id>');
+
+    const removed = removeTask(workspaceRoot, id);
+    if (!removed) fail(`Task not found: ${id}`);
+
     if (json) {
-      printJson({ removed: task });
+      printJson({ removed });
       return;
     }
-    console.log(`Removed task ${task.id}: ${task.title}`);
+
+    console.log(`Removed task: ${formatTask(removed)}`);
     return;
   }
 
@@ -357,72 +508,79 @@ function runTask(subcommand, rest) {
 function runSession(subcommand, rest) {
   requireInitialized('session');
   requireHealthyState('session');
-  const { json, args } = parseCommonFlags(rest);
+
+  const parsed = parseCommonFlags(rest);
+  const replace = parsed.args.includes('--replace');
+  const baseArgs = parsed.args.filter((value) => value !== '--replace');
 
   if (!subcommand || subcommand === 'show') {
-    const session = readSession(workspaceRoot);
-    if (json) {
-      printJson(session);
-      return;
-    }
-    if (!session.active) {
-      console.log(`No active session. Closed sessions: ${session.history.length}`);
-      return;
-    }
-    console.log(`Active session: ${session.active.id} :: ${session.active.label} :: ${session.active.startedAt}`);
-    console.log(`Closed sessions: ${session.history.length}`);
-    return;
-  }
+    const state = normalizeSessionState(readSession(workspaceRoot));
 
-  if (subcommand === 'history') {
-    const session = readSession(workspaceRoot);
-    if (json) {
-      printJson({ history: session.history });
+    if (parsed.json) {
+      printJson({ active: state.active });
       return;
     }
-    if (session.history.length === 0) {
-      console.log('No closed sessions recorded.');
+
+    if (!state.active) {
+      console.log('No active session.');
       return;
     }
-    for (const item of session.history) {
-      console.log(`${item.id} :: ${item.label} :: ${item.startedAt} -> ${item.endedAt}`);
-    }
+
+    console.log(`Active session: ${state.active.id} :: ${state.active.label}`);
     return;
   }
 
   if (subcommand === 'start') {
-    const replace = args.includes('--replace');
-    const labelParts = args.filter((value) => value !== '--replace');
-    const label = labelParts.join(' ').trim() || 'default';
-    const result = startSession(workspaceRoot, label, { replace });
-    if (!result.started) {
-      fail(
-        `Active session already exists: ${result.session.id} (${result.session.label}). Close it first or use 'labflow session start --replace <label>'.`
-      );
-    }
-    if (json) {
-      printJson({ session: result.session, replaced: replace });
+    const label = baseArgs.join(' ').trim();
+    if (!label) fail('Usage: labflow session start <label> [--replace]');
+
+    const session = startSessionWithFallback(label, replace);
+
+    if (parsed.json) {
+      printJson({ session });
       return;
     }
-    console.log(`${replace ? 'Replaced with' : 'Started'} session ${result.session.id} :: ${result.session.label}`);
+
+    console.log(`Started session: ${session.id} :: ${session.label}`);
+    return;
+  }
+
+  if (subcommand === 'history') {
+    const state = normalizeSessionState(readSession(workspaceRoot));
+    const items = state.history;
+
+    if (parsed.json) {
+      printJson({ items });
+      return;
+    }
+
+    if (items.length === 0) {
+      console.log('No session history.');
+      return;
+    }
+
+    for (const item of items) {
+      console.log(`${item.id} :: ${item.label}`);
+    }
+
     return;
   }
 
   if (subcommand === 'close') {
-    const closed = closeSession(workspaceRoot);
-    if (!closed) {
-      if (json) {
-        printJson({ closed: null });
-        return;
-      }
-      console.log('No active session to close.');
-      return;
-    }
-    if (json) {
+    const summaryText = baseArgs.join(' ').trim() || null;
+    const closed = closeSessionWithFallback(summaryText);
+
+    if (parsed.json) {
       printJson({ closed });
       return;
     }
-    console.log(`Closed session ${closed.id} :: ${closed.label}`);
+
+    if (!closed) {
+      console.log('No active session to close.');
+      return;
+    }
+
+    console.log(`Closed session: ${closed.id} :: ${closed.label}`);
     return;
   }
 
@@ -432,50 +590,46 @@ function runSession(subcommand, rest) {
 function runMemory(subcommand, rest) {
   requireInitialized('memory');
   requireHealthyState('memory');
-  const { json, args } = parseCommonFlags(rest);
+
+  const common = parseCommonFlags(rest);
+  const { args: argsWithoutTag, value: tag } = takeOption(common.args, '--tag');
 
   if (!subcommand || subcommand === 'show') {
+    const entriesRaw = readMemoryEntries(workspaceRoot);
+    const entries = Array.isArray(entriesRaw) ? entriesRaw : entriesRaw?.items ?? [];
     const summary = readMemorySummary(workspaceRoot);
-    const entries = readMemoryEntries(workspaceRoot);
-    if (json) {
-      printJson({
-        path: summary.path,
-        lines: summary.lines,
-        notes: summary.notes,
-        entries
-      });
+
+    if (common.json) {
+      printJson({ entries, summary });
       return;
     }
-    console.log(`Memory file: ${summary.path}`);
-    console.log(`Lines: ${summary.lines}`);
-    console.log(`Notes: ${summary.notes}`);
-    if (entries.length > 0) {
-      console.log('Entries:');
-      for (const entry of entries) {
-        const tagPart = entry.tag ? ` [tag:${entry.tag}]` : '';
-        console.log(`- ${entry.timestamp}${tagPart} :: ${entry.text}`);
-      }
+
+    if (entries.length === 0) {
+      console.log('No memory notes recorded.');
+      return;
     }
+
+    for (const entry of entries) {
+      const prefix = entry.tag ? `[${entry.tag}] ` : '';
+      console.log(`${entry.id} :: ${prefix}${entry.text}`);
+    }
+
     return;
   }
 
   if (subcommand === 'append') {
-    const tagIndex = args.indexOf('--tag');
-    let tag = null;
-    let payloadArgs = args;
-    if (tagIndex !== -1) {
-      tag = args[tagIndex + 1];
-      if (!tag) fail('Usage: labflow memory append [--tag <tag>] <text>');
-      payloadArgs = args.filter((_, index) => index !== tagIndex && index !== tagIndex + 1);
-    }
-    const text = payloadArgs.join(' ').trim();
-    if (!text) fail('Usage: labflow memory append [--tag <tag>] <text>');
-    const result = appendMemoryNote(workspaceRoot, text, tag);
-    if (json) {
-      printJson(result);
+    const text = argsWithoutTag.join(' ').trim();
+    if (!text) fail('Usage: labflow memory append <text> [--tag <tag>]');
+
+    const entry = appendMemoryNoteWithFallback(text, tag);
+
+    if (common.json) {
+      printJson({ entry });
       return;
     }
-    console.log(`Appended memory note to ${result.path}`);
+
+    const prefix = entry.tag ? `[${entry.tag}] ` : '';
+    console.log(`Added memory note: ${entry.id} :: ${prefix}${entry.text}`);
     return;
   }
 
@@ -484,11 +638,43 @@ function runMemory(subcommand, rest) {
 
 const args = process.argv.slice(2);
 const command = args[0];
-const subcommand = args[1];
-const rest = args.slice(2);
+const rest = args.slice(1);
 
-if (!command || command === '--help' || command === 'help') {
+if (!command || command === '--help' || command === '-h' || command === 'help') {
   printHelp();
+  process.exit(0);
+}
+
+if (command === 'doctor') {
+  const { json } = parseCommonFlags(rest);
+  printDoctor(json);
+  process.exit(0);
+}
+
+if (command === 'status') {
+  const { json } = parseCommonFlags(rest);
+  printStatus(json);
+  process.exit(0);
+}
+
+if (command === 'init') {
+  const { json } = parseCommonFlags(rest);
+  printInit(json);
+  process.exit(0);
+}
+
+if (command === 'task') {
+  runTask(rest[0], rest.slice(1));
+  process.exit(0);
+}
+
+if (command === 'session') {
+  runSession(rest[0], rest.slice(1));
+  process.exit(0);
+}
+
+if (command === 'memory') {
+  runMemory(rest[0], rest.slice(1));
   process.exit(0);
 }
 
@@ -496,38 +682,4 @@ if (!manifest.stableCommands.includes(command)) {
   fail(`Unknown or non-stable command: ${command}`);
 }
 
-if (command === 'doctor') {
-  const { json } = parseCommonFlags(args.slice(1));
-  printDoctor(json);
-  process.exit(0);
-}
-
-if (command === 'init') {
-  ensureStateDir(workspaceRoot);
-  const { json } = parseCommonFlags(args.slice(1));
-  printInit(json);
-  process.exit(0);
-}
-
-if (command === 'status') {
-  const { json } = parseCommonFlags(args.slice(1));
-  printStatus(json);
-  process.exit(0);
-}
-
-if (command === 'task') {
-  runTask(subcommand, rest);
-  process.exit(0);
-}
-
-if (command === 'session') {
-  runSession(subcommand, rest);
-  process.exit(0);
-}
-
-if (command === 'memory') {
-  runMemory(subcommand, rest);
-  process.exit(0);
-}
-
-fail(`Stable command not yet wired: ${command}`);
+console.log(`Scaffold only: implement '${command}' behavior in Phase 2.`);

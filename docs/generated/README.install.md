@@ -1,8 +1,14 @@
 # Install
 
 ## Current status
-- Public npm install is not supported yet.
-- This repo is currently a workspace / source checkout, not a published package.
+- Source checkout / local development usage is supported.
+- Current root package private mode: `false`.
+- Public registry install status should be confirmed with `pnpm release:readiness` and packed-install verification.
+
+## Canonical URLs
+- Repo: https://github.com/MerverliPy/LabFlow.git
+- Homepage: https://github.com/MerverliPy/LabFlow
+- Issues: https://github.com/MerverliPy/LabFlow/issues
 
 ## Local development usage
 ```bash
@@ -13,7 +19,7 @@ pnpm exec labflow status --json
 ```
 
 ## Notes
-- Do not document `npx labflow ...` until the package is published and installed execution is verified.
 - The CLI resolves the manifest from either the repo root or the CLI package path.
 - Stable workspace state is stored under `.labflow/` in the current working directory.
 - Release blockers are summarized by `pnpm release:readiness` and documented in `RELEASE_READINESS.md`.
+- Use proof artifacts and CI output, not stale prose, as the final source of operational truth.

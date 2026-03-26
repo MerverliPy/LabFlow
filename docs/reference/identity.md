@@ -7,12 +7,14 @@
 - Repo: **labflow**
 
 ## Canonical URLs
-- Repo: **unset until publish**
-- Homepage: **unset until publish**
-- Issues: **unset until publish**
+- Repo: **https://github.com/MerverliPy/LabFlow.git**
+- Homepage: **https://github.com/MerverliPy/LabFlow**
+- Issues: **https://github.com/MerverliPy/LabFlow/issues**
 
 ## Doctor behavior
 `labflow doctor` prints the canonical identity, current workspace root, current `.labflow/` state path, repo root, manifest path, Node version, package-manager identity, schema support, and warnings for known legacy binaries (`ruflo`, `claude-flow`) when detected in `PATH`.
 
 ## Install policy
-Do not document `npx labflow ...` until the package is published, installed execution is verified, and `RELEASE_READINESS.md` is clear.
+- Source checkout and local development usage are supported.
+- Public registry install status must be confirmed by `pnpm release:readiness` and packed-install verification.
+- Do not treat README text alone as proof of registry availability.

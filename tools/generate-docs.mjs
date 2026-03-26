@@ -1,15 +1,27 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+function loadJson(filePath) {
+  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+}
+
 export function buildGeneratedDocs(root = process.cwd()) {
-  const manifest = JSON.parse(fs.readFileSync(path.join(root, 'config', 'stable-command-manifest.json'), 'utf8'));
-  const stable = manifest.stableCommands.map((command) => {
-    const status = manifest.commandStatus?.[command] || 'planned';
-    const summary = manifest.commandSummary?.[command] || '';
-    return `- \`${command}\` [${status}] — ${summary}`;
-  }).join('\n');
-  const experimental = manifest.experimentalAreas.map((c) => '- ' + c).join('\n');
-  const parked = manifest.parkedAreas.map((c) => '- ' + c).join('\n');
+  const manifest = loadJson(path.join(root, 'config', 'stable-command-manifest.json'));
+  const packageJson = loadJson(path.join(root, 'package.json'));
+  const bt = '`'.repeat(3);
+
+  const stable = manifest.stableCommands
+    .map((command) => {
+      const status = manifest.commandStatus?.[command] || 'planned';
+      const summary = manifest.commandSummary?.[command] || '';
+      return `- \`${command}\` [${status}] — ${summary}`;
+    })
+    .join('\n');
+
+  const experimental = manifest.experimentalAreas.map((value) => `- ${value}`).join('\n');
+  const parked = manifest.parkedAreas.map((value) => `- ${value}`).join('\n');
+
+  const privateMode = packageJson.private === true ? 'true' : 'false';
 
   return {
     'README.stable-core.md': [
@@ -28,7 +40,7 @@ export function buildGeneratedDocs(root = process.cwd()) {
       '- `session` supports `start`, `show`, `history`, and `close`, with explicit conflict handling for active sessions.',
       '- `memory` supports ordered notes, optional tags, and structured `--json` output.',
       '- `status` reports workspace state plus the latest proof artifact from `verification/runs/`, including `--json` output and state-issue reporting.',
-      '- Public npm / `npx` install is still intentionally disabled until publish readiness is proven.'
+      '- Public install status should be confirmed with `pnpm release:readiness` and packed-install verification.'
     ].join('\n'),
     'README.support-matrix.md': [
       '# Support Matrix',
@@ -48,22 +60,28 @@ export function buildGeneratedDocs(root = process.cwd()) {
       '# Install',
       '',
       '## Current status',
-      '- Public npm install is not supported yet.',
-      '- This repo is currently a workspace / source checkout, not a published package.',
+      '- Source checkout / local development usage is supported.',
+      `- Current root package private mode: \`${privateMode}\`.`,
+      '- Public registry install status should be confirmed with `pnpm release:readiness` and packed-install verification.',
+      '',
+      '## Canonical URLs',
+      `- Repo: ${manifest.identity.repoUrl}`,
+      `- Homepage: ${manifest.identity.homepageUrl}`,
+      `- Issues: ${manifest.identity.issuesUrl}`,
       '',
       '## Local development usage',
-      '```bash',
+      `${bt}bash`,
       'pnpm install',
       'pnpm exec labflow --help',
       'pnpm exec labflow init',
       'pnpm exec labflow status --json',
-      '```',
+      bt,
       '',
       '## Notes',
-      '- Do not document `npx labflow ...` until the package is published and installed execution is verified.',
       '- The CLI resolves the manifest from either the repo root or the CLI package path.',
       '- Stable workspace state is stored under `.labflow/` in the current working directory.',
-      '- Release blockers are summarized by `pnpm release:readiness` and documented in `RELEASE_READINESS.md`.'
+      '- Release blockers are summarized by `pnpm release:readiness` and documented in `RELEASE_READINESS.md`.',
+      '- Use proof artifacts and CI output, not stale prose, as the final source of operational truth.'
     ].join('\n')
   };
 }
@@ -71,10 +89,13 @@ export function buildGeneratedDocs(root = process.cwd()) {
 export function writeGeneratedDocs(root = process.cwd()) {
   const docs = buildGeneratedDocs(root);
   const outDir = path.join(root, 'docs', 'generated');
+
   fs.mkdirSync(outDir, { recursive: true });
+
   for (const [filename, content] of Object.entries(docs)) {
     fs.writeFileSync(path.join(outDir, filename), `${content}\n`);
   }
+
   return Object.keys(docs);
 }
 

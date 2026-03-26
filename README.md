@@ -1,6 +1,6 @@
 # LabFlow GitHub Implementation Pack
 
-GitHub-ready starter repo for **LabFlow** optimized for **Claude Code terminal**.
+GitHub-ready starter repo for **LabFlow** optimized for a terminal-first workflow.
 
 ## Locked decisions
 - Product / package / CLI / repo identity: **LabFlow / labflow / labflow**
@@ -15,8 +15,9 @@ GitHub-ready starter repo for **LabFlow** optimized for **Claude Code terminal**
 - all 6 stable commands have real local behavior
 - workspace state is stored in `.labflow/`
 - `status --json` reports schema health and proof visibility
-- public npm / `npx` install is **not** supported yet
-- repo, homepage, and issues metadata are now configured
+- canonical identity is defined in `config/stable-command-manifest.json`
+- repo, homepage, and issues metadata are configured
+- public install status must be confirmed with `pnpm release:readiness` and packed-install verification
 - release blockers are tracked in `RELEASE_READINESS.md`
 
 ## What works now
@@ -26,11 +27,6 @@ GitHub-ready starter repo for **LabFlow** optimized for **Claude Code terminal**
 - `labflow session start|show|history|close` manages the active session and closed-session history
 - `labflow memory append|show` manages local memory notes with optional tags
 - `labflow doctor [--json]` prints canonical identity, environment basics, and legacy-binary drift
-
-## Before publish
-- generate `pnpm-lock.yaml` in a networked environment
-- decide package visibility and release process
-- verify installed execution after publish prep is complete
 
 ## First commands
 ```bash

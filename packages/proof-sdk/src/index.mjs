@@ -119,8 +119,7 @@ try {
     );
 
     assert(
-      help.stdout.includes('Local packed install has been verified.') &&
-        help.stdout.includes('Public npm publish is live.'),
+      help.stdout.includes('Public install status should be confirmed with pnpm release:readiness and packed-install verification.'),
       'help missing install truth note'
     );
   });

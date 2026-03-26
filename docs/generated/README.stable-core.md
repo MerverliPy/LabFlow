@@ -18,4 +18,4 @@ Source of truth: `config/stable-command-manifest.json`.
 - `session` supports `start`, `show`, `history`, and `close`, with explicit conflict handling for active sessions.
 - `memory` supports ordered notes, optional tags, and structured `--json` output.
 - `status` reports workspace state plus the latest proof artifact from `verification/runs/`, including `--json` output and state-issue reporting.
-- Public npm / `npx` install is still intentionally disabled until publish readiness is proven.
+- Public install status should be confirmed with `pnpm release:readiness` and packed-install verification.

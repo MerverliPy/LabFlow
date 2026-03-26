@@ -94,7 +94,6 @@ function takeOption(args, optionName) {
       i += 1;
       continue;
     }
-
     nextArgs.push(args[i]);
   }
 
@@ -118,26 +117,19 @@ function normalizeTaskCollection(value) {
 }
 
 function normalizeSessionState(value) {
-  if (!value) {
-    return { active: null, history: [] };
-  }
+  if (!value) return { active: null, history: [] };
+  if (Array.isArray(value)) return { active: null, history: value };
 
-  if (Array.isArray(value)) {
-    return { active: null, history: value };
-  }
+  const active = value.active ?? value.activeSession ?? null;
+  const history = value.history ?? value.historyItems ?? value.closedSessions ?? [];
 
-  const active =
-    value.active ??
-    value.activeSession ??
-    null;
-
-  const history =
-    value.history ??
-    value.historyItems ??
-    value.closedSessions ??
-    [];
-
-  if ('active' in value || 'activeSession' in value || 'history' in value || 'historyItems' in value) {
+  if (
+    'active' in value ||
+    'activeSession' in value ||
+    'history' in value ||
+    'historyItems' in value ||
+    'closedSessions' in value
+  ) {
     return {
       active,
       history: Array.isArray(history) ? history : []
@@ -147,9 +139,74 @@ function normalizeSessionState(value) {
   return { active: value, history: [] };
 }
 
+function normalizeSessionStartResult(value, replace) {
+  if (!value) {
+    return {
+      session: null,
+      started: false,
+      conflict: false,
+      replaced: false
+    };
+  }
+
+  if (
+    typeof value === 'object' &&
+    (
+      'session' in value ||
+      'started' in value ||
+      'conflict' in value ||
+      'replaced' in value
+    )
+  ) {
+    return {
+      session: value.session ?? null,
+      started: value.started ?? Boolean(value.session),
+      conflict: value.conflict ?? false,
+      replaced: value.replaced ?? replace
+    };
+  }
+
+  return {
+    session: value,
+    started: true,
+    conflict: false,
+    replaced: replace
+  };
+}
+
+function shouldRetryCompat(error) {
+  if (!error) return false;
+  if (error instanceof TypeError) return true;
+
+  const message = String(error.message || error);
+  return (
+    message.includes('argument') ||
+    message.includes('options') ||
+    message.includes('replace') ||
+    message.includes('tag')
+  );
+}
+
+function callWithCompat(attempts) {
+  let lastError = null;
+
+  for (let i = 0; i < attempts.length; i += 1) {
+    try {
+      return attempts[i]();
+    } catch (error) {
+      lastError = error;
+      if (!shouldRetryCompat(error) || i === attempts.length - 1) {
+        throw error;
+      }
+    }
+  }
+
+  throw lastError;
+}
+
 function blockingIssuesFor(scope) {
   const inspection = inspectWorkspaceState(workspaceRoot);
-  const relevant = inspection.issues.filter((issue) => {
+  return inspection.issues.filter((issue) => {
     if (
       issue.code === 'unsupported-schema-version' ||
       issue.code === 'missing-schema-version' ||
@@ -164,17 +221,11 @@ function blockingIssuesFor(scope) {
 
     return false;
   });
-
-  return relevant;
 }
 
 function requireInitialized(commandName) {
   if (isInitialized(workspaceRoot)) return;
-
-  fail(
-    `Workspace is not initialized. Run 'labflow init' before '${commandName}'.`,
-    EXIT_USAGE
-  );
+  fail(`Workspace is not initialized. Run 'labflow init' before '${commandName}'.`, EXIT_USAGE);
 }
 
 function requireHealthyState(scope) {
@@ -239,7 +290,7 @@ function printHelp() {
   console.log('');
   console.log('Current repo phase:');
   console.log(`- ${resolveDisplayedRepoPhase()}`);
-  console.log('- Public npm install is live. Local packed install and npm publish have been verified.');
+  console.log('- Local packed install has been verified. Public npm publish is not complete yet.');
 }
 
 function printDoctor(json = false) {
@@ -366,35 +417,26 @@ function printStatus(json = false) {
 }
 
 function startSessionWithFallback(label, replace) {
-  try {
-    return startSession(workspaceRoot, label, { replace });
-  } catch {
-    try {
-      return startSession(workspaceRoot, label, replace);
-    } catch {
-      return startSession(workspaceRoot, label);
-    }
-  }
+  return callWithCompat([
+    () => startSession(workspaceRoot, label, { replace }),
+    () => startSession(workspaceRoot, label, replace),
+    () => startSession(workspaceRoot, label)
+  ]);
 }
 
 function closeSessionWithFallback(summaryText) {
-  try {
-    return closeSession(workspaceRoot, summaryText);
-  } catch {
-    return closeSession(workspaceRoot);
-  }
+  return callWithCompat([
+    () => closeSession(workspaceRoot, summaryText),
+    () => closeSession(workspaceRoot)
+  ]);
 }
 
 function appendMemoryNoteWithFallback(note, tag) {
-  try {
-    return appendMemoryNote(workspaceRoot, note, { tag });
-  } catch {
-    try {
-      return appendMemoryNote(workspaceRoot, note, tag);
-    } catch {
-      return appendMemoryNote(workspaceRoot, note);
-    }
-  }
+  return callWithCompat([
+    () => appendMemoryNote(workspaceRoot, note, { tag }),
+    () => appendMemoryNote(workspaceRoot, note, tag),
+    () => appendMemoryNote(workspaceRoot, note)
+  ]);
 }
 
 function runTask(subcommand, rest) {
@@ -517,7 +559,7 @@ function runSession(subcommand, rest) {
     const state = normalizeSessionState(readSession(workspaceRoot));
 
     if (parsed.json) {
-      printJson({ active: state.active });
+      printJson({ session: state.active, active: state.active });
       return;
     }
 
@@ -534,32 +576,45 @@ function runSession(subcommand, rest) {
     const label = baseArgs.join(' ').trim();
     if (!label) fail('Usage: labflow session start <label> [--replace]');
 
-    const session = startSessionWithFallback(label, replace);
+    const result = normalizeSessionStartResult(startSessionWithFallback(label, replace), replace);
+
+    if (result.conflict && !replace) {
+      fail('Active session already exists');
+    }
+
+    if (!result.session || !result.session.id) {
+      fail('Session start failed to return session with id');
+    }
 
     if (parsed.json) {
-      printJson({ session });
+      printJson({
+        session: result.session,
+        started: result.started,
+        conflict: result.conflict,
+        replaced: result.replaced
+      });
       return;
     }
 
-    console.log(`Started session: ${session.id} :: ${session.label}`);
+    console.log(`Started session: ${result.session.id} :: ${result.session.label}`);
     return;
   }
 
   if (subcommand === 'history') {
     const state = normalizeSessionState(readSession(workspaceRoot));
-    const items = state.history;
+    const history = state.history;
 
     if (parsed.json) {
-      printJson({ items });
+      printJson({ history, items: history });
       return;
     }
 
-    if (items.length === 0) {
+    if (history.length === 0) {
       console.log('No session history.');
       return;
     }
 
-    for (const item of items) {
+    for (const item of history) {
       console.log(`${item.id} :: ${item.label}`);
     }
 
@@ -621,7 +676,8 @@ function runMemory(subcommand, rest) {
     const text = argsWithoutTag.join(' ').trim();
     if (!text) fail('Usage: labflow memory append <text> [--tag <tag>]');
 
-    const entry = appendMemoryNoteWithFallback(text, tag);
+    const memoryResult = appendMemoryNoteWithFallback(text, tag);
+    const entry = memoryResult?.entry ?? memoryResult;
 
     if (common.json) {
       printJson({ entry });

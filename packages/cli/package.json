@@ -15,8 +15,8 @@
     "type": "git",
     "url": "git+https://github.com/MerverliPy/LabFlow.git"
   },
-  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
   "bugs": {
     "url": "https://github.com/MerverliPy/LabFlow/issues"
-  }
+  },
+  "homepage": "https://github.com/MerverliPy/LabFlow"
 }

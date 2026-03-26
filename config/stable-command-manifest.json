@@ -3,8 +3,8 @@
     "productName": "LabFlow",
     "packageName": "labflow",
     "cliName": "labflow",
-    "repoUrl": "https://github.com/MerverliPy/LabFlow",
-    "homepageUrl": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+    "repoUrl": "https://github.com/MerverliPy/LabFlow.git",
+    "homepageUrl": "https://github.com/MerverliPy/LabFlow",
     "issuesUrl": "https://github.com/MerverliPy/LabFlow/issues"
   },
   "stableCommands": [

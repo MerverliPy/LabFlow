@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { randomUUID } from 'node:crypto';
 
 const STATE_DIRNAME = '.labflow';
 const META_FILE = 'meta.json';
@@ -16,6 +17,10 @@ function structuredCloneFallback(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+function isPlainObject(value) {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value);
+}
+
 function defaultMeta() {
   return {
     schemaVersion: SUPPORTED_STATE_SCHEMA_VERSION,
@@ -23,7 +28,8 @@ function defaultMeta() {
     cliName: null,
     initializedAt: null,
     stableCommands: [],
-    migratedAt: null
+    migratedAt: null,
+    nextTaskId: 1
   };
 }
 
@@ -76,7 +82,32 @@ function pushIssue(issues, issue) {
   });
 }
 
-function safeReadJson(filePath, fallback, code, issues) {
+function validateMetaShape(value) {
+  return (
+    isPlainObject(value) &&
+    (value.schemaVersion === undefined || typeof value.schemaVersion === 'number') &&
+    (value.productName === undefined || value.productName === null || typeof value.productName === 'string') &&
+    (value.cliName === undefined || value.cliName === null || typeof value.cliName === 'string') &&
+    (value.initializedAt === undefined || value.initializedAt === null || typeof value.initializedAt === 'string') &&
+    (value.migratedAt === undefined || value.migratedAt === null || typeof value.migratedAt === 'string') &&
+    (value.nextTaskId === undefined || typeof value.nextTaskId === 'number') &&
+    (value.stableCommands === undefined || Array.isArray(value.stableCommands))
+  );
+}
+
+function validateTasksShape(value) {
+  return isPlainObject(value) && Array.isArray(value.items);
+}
+
+function validateSessionShape(value) {
+  return (
+    isPlainObject(value) &&
+    Array.isArray(value.history) &&
+    (value.active === null || value.active === undefined || isPlainObject(value.active))
+  );
+}
+
+function safeReadJson(filePath, fallback, code, issues, validate) {
   if (!fs.existsSync(filePath)) {
     if (issues) {
       pushIssue(issues, {
@@ -89,7 +120,20 @@ function safeReadJson(filePath, fallback, code, issues) {
   }
 
   try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    const parsed = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+    if (validate && !validate(parsed)) {
+      if (issues) {
+        pushIssue(issues, {
+          code: `invalid-${code}`,
+          file: filePath,
+          message: `State file has an invalid structure: ${path.basename(filePath)}`
+        });
+      }
+      return structuredCloneFallback(fallback);
+    }
+
+    return parsed;
   } catch (error) {
     if (issues) {
       pushIssue(issues, {
@@ -101,6 +145,32 @@ function safeReadJson(filePath, fallback, code, issues) {
     }
     return structuredCloneFallback(fallback);
   }
+}
+
+function deriveNextTaskIdFromTasks(taskData) {
+  let maxId = 0;
+
+  for (const item of taskData.items ?? []) {
+    if (!item || typeof item.id !== 'string') continue;
+    const match = item.id.match(/^task-(\d+)$/);
+    if (!match) continue;
+    maxId = Math.max(maxId, Number(match[1]));
+  }
+
+  return maxId + 1;
+}
+
+function normalizeMeta(meta, taskData) {
+  const nextTaskId =
+    typeof meta.nextTaskId === 'number' && Number.isFinite(meta.nextTaskId) && meta.nextTaskId > 0
+      ? Math.floor(meta.nextTaskId)
+      : deriveNextTaskIdFromTasks(taskData);
+
+  return {
+    ...defaultMeta(),
+    ...meta,
+    nextTaskId
+  };
 }
 
 function ensureMemoryFile(workspaceRoot) {
@@ -123,7 +193,8 @@ export function initWorkspace(workspaceRoot, manifest) {
       cliName: manifest.identity.cliName,
       initializedAt: isoNow(),
       stableCommands: manifest.stableCommands,
-      migratedAt: null
+      migratedAt: null,
+      nextTaskId: 1
     },
     [files.tasks]: defaultTasks(),
     [files.session]: defaultSession(),
@@ -140,6 +211,13 @@ export function initWorkspace(workspaceRoot, manifest) {
     else fs.writeFileSync(filePath, value);
     created.push(filePath);
   }
+
+  const taskData = safeReadJson(files.tasks, defaultTasks(), 'tasks', null, validateTasksShape);
+  const meta = normalizeMeta(
+    safeReadJson(files.meta, defaultMeta(), 'meta', null, validateMetaShape),
+    taskData
+  );
+  writeJson(files.meta, meta);
 
   return {
     stateDir: files.stateDir,
@@ -163,14 +241,17 @@ export function migrateWorkspaceState(workspaceRoot) {
     return { migrated: false, fromVersion: null, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
   }
 
+  const taskData = safeReadJson(files.tasks, defaultTasks(), 'tasks', null, validateTasksShape);
   const fromVersion = typeof meta.schemaVersion === 'number' ? meta.schemaVersion : 0;
-  if (fromVersion >= SUPPORTED_STATE_SCHEMA_VERSION) {
+  const normalized = normalizeMeta(meta, taskData);
+
+  if (fromVersion >= SUPPORTED_STATE_SCHEMA_VERSION && typeof meta.nextTaskId === 'number') {
     return { migrated: false, fromVersion, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
   }
 
   const next = {
     ...defaultMeta(),
-    ...meta,
+    ...normalized,
     schemaVersion: SUPPORTED_STATE_SCHEMA_VERSION,
     migratedAt: isoNow()
   };
@@ -199,7 +280,7 @@ export function inspectWorkspaceState(workspaceRoot) {
     };
   }
 
-  const meta = safeReadJson(files.meta, defaultMeta(), 'meta', issues);
+  const meta = safeReadJson(files.meta, defaultMeta(), 'meta', issues, validateMetaShape);
   const schemaVersion = typeof meta.schemaVersion === 'number' ? meta.schemaVersion : null;
   if (schemaVersion === null) {
     pushIssue(issues, {
@@ -215,8 +296,8 @@ export function inspectWorkspaceState(workspaceRoot) {
     });
   }
 
-  safeReadJson(files.tasks, defaultTasks(), 'tasks', issues);
-  safeReadJson(files.session, defaultSession(), 'session', issues);
+  safeReadJson(files.tasks, defaultTasks(), 'tasks', issues, validateTasksShape);
+  safeReadJson(files.session, defaultSession(), 'session', issues, validateSessionShape);
   if (!fs.existsSync(files.memory)) {
     pushIssue(issues, {
       code: 'missing-memory',
@@ -234,11 +315,20 @@ export function inspectWorkspaceState(workspaceRoot) {
 }
 
 export function readMeta(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).meta, defaultMeta(), 'meta');
+  const files = workspaceFiles(workspaceRoot);
+  const tasks = safeReadJson(files.tasks, defaultTasks(), 'tasks', null, validateTasksShape);
+  const meta = safeReadJson(files.meta, defaultMeta(), 'meta', null, validateMetaShape);
+  return normalizeMeta(meta, tasks);
 }
 
 export function readTasks(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).tasks, defaultTasks(), 'tasks');
+  return safeReadJson(
+    workspaceFiles(workspaceRoot).tasks,
+    defaultTasks(),
+    'tasks',
+    null,
+    validateTasksShape
+  );
 }
 
 export function findTask(workspaceRoot, taskId) {
@@ -247,8 +337,14 @@ export function findTask(workspaceRoot, taskId) {
 
 export function addTask(workspaceRoot, title) {
   if (!title || !title.trim()) throw new Error('Task title is required.');
+  const files = workspaceFiles(workspaceRoot);
   const data = readTasks(workspaceRoot);
-  const index = data.items.length + 1;
+  const meta = normalizeMeta(
+    safeReadJson(files.meta, defaultMeta(), 'meta', null, validateMetaShape),
+    data
+  );
+
+  const index = meta.nextTaskId;
   const task = {
     id: `task-${String(index).padStart(3, '0')}`,
     title: title.trim(),
@@ -256,7 +352,9 @@ export function addTask(workspaceRoot, title) {
     createdAt: isoNow()
   };
   data.items.push(task);
-  writeJson(workspaceFiles(workspaceRoot).tasks, data);
+  meta.nextTaskId = index + 1;
+  writeJson(files.tasks, data);
+  writeJson(files.meta, meta);
   return task;
 }
 
@@ -292,12 +390,11 @@ export function removeTask(workspaceRoot, taskId) {
 }
 
 export function readSession(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).session, defaultSession(), 'session');
+  return safeReadJson(workspaceFiles(workspaceRoot).session, defaultSession(), 'session', null, validateSessionShape);
 }
 
 function createSessionId() {
-  const stamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
-  return `session-${stamp}`;
+  return `session-${Date.now()}-${randomUUID().slice(0, 8)}`;
 }
 
 export function startSession(workspaceRoot, label = 'default', options = {}) {

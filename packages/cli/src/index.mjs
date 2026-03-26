@@ -290,7 +290,7 @@ function printHelp() {
   console.log('');
   console.log('Current repo phase:');
   console.log(`- ${resolveDisplayedRepoPhase()}`);
-  console.log('- Local packed install has been verified. Public npm publish is not complete yet.');
+  console.log('- Local packed install has been verified. Public npm publish is live.');
 }
 
 function printDoctor(json = false) {

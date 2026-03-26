@@ -120,7 +120,7 @@ try {
 
     assert(
       help.stdout.includes('Local packed install has been verified.') &&
-        help.stdout.includes('Public npm publish is not complete yet.'),
+        help.stdout.includes('Public npm publish is live.'),
       'help missing install truth note'
     );
   });

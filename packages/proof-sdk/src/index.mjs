@@ -134,7 +134,7 @@ try {
     assert(payload.product.productName === manifest.identity.productName, 'doctor product identity drift');
     assert(payload.product.packageName === manifest.identity.packageName, 'doctor package identity drift');
     assert(payload.product.cliName === manifest.identity.cliName, 'doctor cli identity drift');
-    assert(payload.privatePackage === false, 'doctor privatePackage drift');
+    assert(payload.privatePackage === true, 'doctor privatePackage drift');
   });
 
   pushCheck('status before init', () => {

@@ -16,7 +16,7 @@
         "source": "git-subdir",
         "url": "MerverliPy/LabFlow",
         "path": "plugins/labflow-claude-pack",
-        "ref": "main"
+        "ref": "v1.0.0"
       }
     }
   ]

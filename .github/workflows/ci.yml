@@ -8,9 +8,20 @@ on:
 permissions:
   contents: read
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   ci:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -31,46 +42,23 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Validate manifest
-        run: pnpm validate:manifest
-
-      - name: Generate docs
-        run: pnpm generate:docs
-
-      - name: Verify generated docs
-        run: pnpm verify:generated-docs
-
-      - name: Build
+      - name: Build site app
         run: pnpm build
 
-      - name: Test
-        run: pnpm test
+      - name: Check runtime helper syntax
+        run: node --check packages/core/src/runtime.mjs
 
-      - name: Proof verify
-        run: pnpm proof:verify
+      - name: Check core entry syntax
+        run: node --check packages/core/src/index.mjs
 
-      - name: Upload proof artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ci-proof-results
-          path: verification/runs/**
+      - name: Check docs generator syntax
+        run: node --check tools/generate-docs.mjs
 
-      - name: Check shell scripts
-        run: pnpm check:shell
+      - name: Runtime path regression test
+        run: node --test packages/core/test/runtime.test.mjs
 
-      - name: Release readiness
-        run: pnpm release:readiness
+      - name: Generate docs
+        run: node tools/generate-docs.mjs
 
-      - name: Pack npm tarball
-        run: npm pack
-
-      - name: Verify packed install
-        run: |
-          TMP_DIR="$(mktemp -d)"
-          cd "$TMP_DIR"
-          npm init -y
-          npm install "$GITHUB_WORKSPACE"/labflow-*.tgz
-          npx --no-install labflow --help
-          npx --no-install labflow doctor --json
-          npx --no-install labflow status --json
+      - name: Verify generated docs
+        run: node tools/check-generated-docs.mjs

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "node --check src/store.mjs && node --check src/index.mjs",
     "typecheck": "echo typecheck-memory",
-    "test": "node --input-type=module -e \"import('./src/index.mjs').then((m) => { const dir = m.ensureStateDir(); if (!dir.endsWith('.labflow')) process.exit(1); console.log('memory exports ok'); })\""
+    "test": "node --test test/*.test.mjs && node --input-type=module -e \"import('./src/index.mjs').then((m) => { const dir = m.ensureStateDir(); if (!dir.endsWith('.labflow')) process.exit(1); console.log('memory exports ok'); })\""
   },
   "repository": {
     "type": "git",

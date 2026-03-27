@@ -4,13 +4,14 @@
   "private": false,
   "type": "module",
   "bin": {
-    "labflow": "./src/index.mjs"
+    "labflow": "./dist/index.mjs"
   },
   "exports": {
-    ".": "./src/index.mjs"
+    ".": "./dist/index.mjs"
   },
   "files": [
-    "src",
+    "dist",
+    "config",
     "README.md",
     "AGENTS.md"
   ],
@@ -21,10 +22,11 @@
     "access": "public"
   },
   "scripts": {
-    "build": "node --check src/index.mjs",
+    "build": "node ./scripts/build.mjs && node --check dist/index.mjs",
     "lint": "node --check src/index.mjs",
     "typecheck": "node --check src/index.mjs",
-    "test": "node src/index.mjs --help && node src/index.mjs doctor --json && node src/index.mjs status --json"
+    "test": "node src/index.mjs --help && node src/index.mjs doctor --json && node src/index.mjs status --json",
+    "prepack": "pnpm run build"
   },
   "repository": {
     "type": "git",
@@ -39,5 +41,8 @@
     "workspace",
     "developer-tools",
     "terminal"
-  ]
+  ],
+  "devDependencies": {
+    "esbuild": "^0.25.2"
+  }
 }

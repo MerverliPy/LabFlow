@@ -1,3 +1,253 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(pwd)"
+
+if [[ ! -f "$REPO_ROOT/package.json" || ! -d "$REPO_ROOT/packages/cli" ]]; then
+  echo "Run this script from the LabFlow repository root." >&2
+  exit 1
+fi
+
+mkdir -p packages/cli/scripts packages/memory/test scripts .github/workflows
+
+cat > package.json <<'EOF'
+{
+  "name": "labflow-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --if-present run build",
+    "build:www": "pnpm --dir apps/www run build",
+    "dev:www": "pnpm --dir apps/www run dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "pnpm -r --if-present run test",
+    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm build && pnpm proof:verify",
+    "proof:verify": "pnpm --dir packages/proof-sdk run verify",
+    "release:readiness": "pnpm verify && bash scripts/packed-install-smoke.sh"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
+  }
+}
+EOF
+
+cat > packages/cli/package.json <<'EOF'
+{
+  "name": "@labflow/cli",
+  "version": "0.1.0",
+  "private": false,
+  "type": "module",
+  "bin": {
+    "labflow": "./dist/index.mjs"
+  },
+  "exports": {
+    ".": "./dist/index.mjs"
+  },
+  "files": [
+    "dist",
+    "config",
+    "README.md",
+    "AGENTS.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node ./scripts/build.mjs && node --check dist/index.mjs",
+    "lint": "node --check src/index.mjs",
+    "typecheck": "node --check src/index.mjs",
+    "test": "node src/index.mjs --help && node src/index.mjs doctor --json && node src/index.mjs status --json",
+    "prepack": "pnpm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  },
+  "homepage": "https://github.com/MerverliPy/LabFlow#readme",
+  "keywords": [
+    "cli",
+    "workspace",
+    "developer-tools",
+    "terminal"
+  ],
+  "devDependencies": {
+    "esbuild": "^0.25.2"
+  }
+}
+EOF
+
+cat > packages/cli/scripts/build.mjs <<'EOF'
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+import { build } from 'esbuild';
+
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const packageRoot = path.resolve(scriptDir, '..');
+const repoRoot = path.resolve(packageRoot, '..', '..');
+
+const distDir = path.join(packageRoot, 'dist');
+const configDir = path.join(packageRoot, 'config');
+
+await fs.rm(distDir, { recursive: true, force: true });
+await fs.mkdir(distDir, { recursive: true });
+
+await build({
+  entryPoints: [path.join(packageRoot, 'src', 'index.mjs')],
+  bundle: true,
+  platform: 'node',
+  format: 'esm',
+  target: 'node20',
+  outfile: path.join(distDir, 'index.mjs'),
+});
+
+await fs.mkdir(configDir, { recursive: true });
+await fs.copyFile(
+  path.join(repoRoot, 'config', 'stable-command-manifest.json'),
+  path.join(configDir, 'stable-command-manifest.json')
+);
+EOF
+
+python3 <<'PY'
+from pathlib import Path
+
+path = Path('packages/cli/src/index.mjs')
+text = path.read_text()
+
+old = """    if (
+      issue.code === 'unsupported-schema-version' ||
+      issue.code === 'missing-schema-version' ||
+      issue.code === 'corrupted-meta'
+    ) {
+      return true;
+    }
+"""
+
+new = """    if (
+      issue.code === 'unsupported-schema-version' ||
+      issue.code === 'missing-schema-version' ||
+      issue.code === 'corrupted-meta' ||
+      issue.code === 'invalid-meta'
+    ) {
+      return true;
+    }
+"""
+
+if old not in text:
+    raise SystemExit('Target block not found in packages/cli/src/index.mjs')
+
+path.write_text(text.replace(old, new))
+print('Patched packages/cli/src/index.mjs')
+PY
+
+cat > packages/memory/package.json <<'EOF'
+{
+  "name": "@labflow/memory",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node --check src/store.mjs && node --check src/index.mjs",
+    "typecheck": "echo typecheck-memory",
+    "test": "node --test test/*.test.mjs && node --input-type=module -e \"import('./src/index.mjs').then((m) => { const dir = m.ensureStateDir(); if (!dir.endsWith('.labflow')) process.exit(1); console.log('memory exports ok'); })\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MerverliPy/LabFlow.git"
+  },
+  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "bugs": {
+    "url": "https://github.com/MerverliPy/LabFlow/issues"
+  }
+}
+EOF
+
+cat > packages/memory/test/store.test.mjs <<'EOF'
+
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+import {
+  initWorkspace,
+  addTask,
+  removeTask,
+  readTasks,
+  readSession,
+  inspectWorkspaceState
+} from '../src/index.mjs';
+
+const manifest = {
+  identity: {
+    productName: 'LabFlow',
+    cliName: 'labflow'
+  },
+  stableCommands: ['init', 'task', 'session', 'memory', 'status', 'doctor']
+};
+
+function makeWorkspace() {
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'labflow-memory-test-'));
+}
+
+test('task ids remain monotonic after removals', () => {
+  const workspace = makeWorkspace();
+  initWorkspace(workspace, manifest);
+
+  const first = addTask(workspace, 'first');
+  const second = addTask(workspace, 'second');
+  removeTask(workspace, first.id);
+  const third = addTask(workspace, 'third');
+
+  assert.equal(first.id, 'task-001');
+  assert.equal(second.id, 'task-002');
+  assert.equal(third.id, 'task-003');
+  assert.deepEqual(
+    readTasks(workspace).items.map((item) => item.id),
+    ['task-002', 'task-003']
+  );
+});
+
+test('invalid task shape is reported and readTasks falls back safely', () => {
+  const workspace = makeWorkspace();
+  initWorkspace(workspace, manifest);
+
+  fs.writeFileSync(path.join(workspace, '.labflow', 'tasks.json'), '{}');
+
+  const inspection = inspectWorkspaceState(workspace);
+  assert.ok(inspection.issues.some((issue) => issue.code === 'invalid-tasks'));
+  assert.deepEqual(readTasks(workspace), { items: [] });
+});
+
+test('invalid session shape is reported and readSession falls back safely', () => {
+  const workspace = makeWorkspace();
+  initWorkspace(workspace, manifest);
+
+  fs.writeFileSync(
+    path.join(workspace, '.labflow', 'session.json'),
+    JSON.stringify({ active: {}, history: {} }, null, 2)
+  );
+
+  const inspection = inspectWorkspaceState(workspace);
+  assert.ok(inspection.issues.some((issue) => issue.code === 'invalid-session'));
+  assert.deepEqual(readSession(workspace), { active: null, history: [] });
+});
+EOF
+
+cat > packages/memory/src/store.mjs <<'EOF'
+
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -143,7 +393,10 @@ function normalizeSessionRecord(record) {
     throw new Error('session.label must be a non-empty string');
   }
 
-  if (typeof record.startedAt !== 'string' || record.startedAt.trim() === '') {
+  if (
+    typeof record.startedAt !== 'string' ||
+    record.startedAt.trim() === ''
+  ) {
     throw new Error('session.startedAt must be a non-empty string');
   }
 
@@ -158,7 +411,8 @@ function normalizeSessionRecord(record) {
   if (
     record.endedReason !== undefined &&
     record.endedReason !== null &&
-    (typeof record.endedReason !== 'string' || record.endedReason.trim() === '')
+    (typeof record.endedReason !== 'string' ||
+      record.endedReason.trim() === '')
   ) {
     throw new Error(
       'session.endedReason must be a non-empty string when present'
@@ -182,9 +436,7 @@ function normalizeSessionRecord(record) {
     label: record.label.trim(),
     startedAt: record.startedAt.trim(),
     endedAt:
-      typeof record.endedAt === 'string'
-        ? record.endedAt.trim()
-        : record.endedAt,
+      typeof record.endedAt === 'string' ? record.endedAt.trim() : record.endedAt,
     endedReason:
       typeof record.endedReason === 'string'
         ? record.endedReason.trim()
@@ -209,11 +461,7 @@ function normalizeSessionData(value) {
   const historySource =
     value.history ?? value.historyItems ?? value.closedSessions ?? [];
 
-  if (
-    activeSource !== null &&
-    activeSource !== undefined &&
-    !isPlainObject(activeSource)
-  ) {
+  if (activeSource !== null && activeSource !== undefined && !isPlainObject(activeSource)) {
     throw new Error('session.active must be an object when present');
   }
 
@@ -506,13 +754,7 @@ export function inspectWorkspaceState(workspaceRoot) {
     });
   }
 
-  safeReadJson(
-    files.tasks,
-    defaultTasks(),
-    'tasks',
-    issues,
-    normalizeTasksData
-  );
+  safeReadJson(files.tasks, defaultTasks(), 'tasks', issues, normalizeTasksData);
   safeReadJson(
     files.session,
     defaultSession(),
@@ -753,3 +995,180 @@ if (process.argv[1] && process.argv[1].endsWith('store.mjs')) {
   ensureStateDir();
   console.log('memory store ready');
 }
+EOF
+
+cat > .github/workflows/ci.yml <<'EOF'
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            pnpm install
+          fi
+
+      - name: Verify workspace
+        run: pnpm verify
+EOF
+
+cat > .github/workflows/publish.yml <<'EOF'
+name: Publish CLI
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            pnpm install
+          fi
+
+      - name: Verify workspace
+        run: pnpm verify
+
+      - name: Packed-install smoke test
+        run: bash scripts/packed-install-smoke.sh
+
+      - name: Publish CLI
+        working-directory: packages/cli
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+EOF
+
+cat > scripts/packed-install-smoke.sh <<'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+PACKAGE_DIR="$REPO_ROOT/packages/cli"
+INSTALL_ROOT="$(mktemp -d)"
+WORKSPACE_ROOT="$(mktemp -d)"
+
+cleanup() {
+  rm -rf "$INSTALL_ROOT" "$WORKSPACE_ROOT"
+}
+
+trap cleanup EXIT
+
+find "$PACKAGE_DIR" -maxdepth 1 -name '*.tgz' -delete
+
+(
+  cd "$REPO_ROOT"
+  pnpm --dir packages/cli pack >/dev/null
+)
+
+TARBALL="$(ls -1t "$PACKAGE_DIR"/*.tgz | head -n 1)"
+
+if [[ -z "${TARBALL:-}" || ! -f "$TARBALL" ]]; then
+  echo "Packed-install smoke test failed: no CLI tarball was produced." >&2
+  exit 1
+fi
+
+(
+  cd "$INSTALL_ROOT"
+  npm init -y >/dev/null 2>&1
+  npm install "$TARBALL" >/dev/null 2>&1
+  ./node_modules/.bin/labflow --help >/dev/null
+  ./node_modules/.bin/labflow doctor --json > doctor.json
+  node - <<'NODE'
+const fs = require('fs');
+
+const payload = JSON.parse(fs.readFileSync('doctor.json', 'utf8'));
+if (payload.product?.productName !== 'LabFlow') {
+  throw new Error('doctor productName drift in packed install');
+}
+if (payload.product?.cliName !== 'labflow') {
+  throw new Error('doctor cliName drift in packed install');
+}
+NODE
+)
+
+(
+  cd "$WORKSPACE_ROOT"
+  "$INSTALL_ROOT/node_modules/.bin/labflow" init --json >/dev/null
+  "$INSTALL_ROOT/node_modules/.bin/labflow" status --json > status.json
+  node - <<'NODE'
+const fs = require('fs');
+
+const payload = JSON.parse(fs.readFileSync('status.json', 'utf8'));
+if (payload.initialized !== true) {
+  throw new Error('packed install should initialize workspace successfully');
+}
+if (payload.product !== 'LabFlow') {
+  throw new Error('packed install status product drift');
+}
+NODE
+)
+
+echo "Packed-install smoke test passed: $TARBALL"
+EOF
+chmod +x scripts/packed-install-smoke.sh
+
+echo "Critical hardening patch applied."
+echo "Next:"
+echo "  1) corepack enable"
+echo "  2) pnpm install"
+echo "  3) pnpm verify"
+echo "  4) bash scripts/packed-install-smoke.sh"

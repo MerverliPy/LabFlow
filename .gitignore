@@ -12,3 +12,4 @@ coverage/
 
 __pycache__/
 *.pyc
+.claude/_archive-duplicates-*/

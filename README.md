@@ -153,14 +153,14 @@ pnpm dev:www
 
 ## CLI surface
 
-| Command | Purpose |
-|---|---|
-| `init` | Create or repair local `.labflow` state files |
-| `task` | Add, inspect, complete, reopen, and remove lightweight tasks |
-| `session` | Start, inspect, replace, close, and review session history |
-| `memory` | Append tagged notes and inspect memory entries |
-| `status` | Report workspace state, schema health, and proof visibility |
-| `doctor` | Print canonical identity, environment basics, and legacy-binary warnings |
+| Command   | Purpose                                                                  |
+| --------- | ------------------------------------------------------------------------ |
+| `init`    | Create or repair local `.labflow` state files                            |
+| `task`    | Add, inspect, complete, reopen, and remove lightweight tasks             |
+| `session` | Start, inspect, replace, close, and review session history               |
+| `memory`  | Append tagged notes and inspect memory entries                           |
+| `status`  | Report workspace state, schema health, and proof visibility              |
+| `doctor`  | Print canonical identity, environment basics, and legacy-binary warnings |
 
 ---
 

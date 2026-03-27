@@ -1,1 +1,5 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
+contact_links:
+  - name: Security issue
+    url: ./SECURITY.md
+    about: Do not file security issues publicly. Follow the guidance in SECURITY.md.

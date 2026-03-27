@@ -17,5 +17,4 @@ Goals:
 Rules:
 - no direct edits
 - prefer fewer files, fewer commands, and fewer moving parts
-- treat `STATE.md`, `PHASE_HANDOFF.md`, `known-issues.md`, and `decision-log.md` as active truth
-- update memory only with durable repo patterns and structural lessons
+- update memory only with durable structural lessons

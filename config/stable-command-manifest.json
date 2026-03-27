@@ -7,7 +7,14 @@
     "homepageUrl": "https://github.com/MerverliPy/LabFlow",
     "issuesUrl": "https://github.com/MerverliPy/LabFlow/issues"
   },
-  "stableCommands": ["init", "task", "session", "memory", "status", "doctor"],
+  "stableCommands": [
+    "init",
+    "task",
+    "session",
+    "memory",
+    "status",
+    "doctor"
+  ],
   "commandStatus": {
     "init": "implemented",
     "task": "implemented-minimal",
@@ -24,17 +31,27 @@
     "status": "report workspace state, schema health, and proof visibility with optional json",
     "doctor": "print canonical identity, environment basics, and detect known legacy binaries"
   },
-  "experimentalAreas": ["providers", "security", "deploy", "codex"],
-  "parkedAreas": ["swarm", "neural", "learn", "giant agent catalogs"],
+  "experimentalAreas": [
+    "providers",
+    "security",
+    "deploy",
+    "codex"
+  ],
+  "parkedAreas": [
+    "swarm",
+    "neural",
+    "learn",
+    "giant agent catalogs"
+  ],
   "skills": [
     "phase-plan",
     "phase-work",
     "phase-verify",
-    "handoff",
-    "phase-close",
-    "resume-latest",
-    "review-worktree",
-    "verify-worktree"
+    "handoff"
   ],
-  "subagents": ["repo-architect", "implementer", "verifier"]
+  "subagents": [
+    "repo-architect",
+    "implementer",
+    "verifier"
+  ]
 }

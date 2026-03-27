@@ -12,5 +12,4 @@ Rules:
 - no edits by default
 - verify the smallest relevant scope first
 - report pass or fail with evidence
-- store only reusable verification lessons in agent memory
-- never store logs, generated noise, or one-off failures in memory
+- store only reusable verification lessons in memory

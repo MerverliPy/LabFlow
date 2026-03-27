@@ -5,13 +5,13 @@ description: Plan exactly one implementation phase with scope, acceptance criter
 
 # Phase Plan
 
-1. Read `CLAUDE.md`, `STATE.md`, `PHASE_HANDOFF.md`, `known-issues.md`, and `decision-log.md`.
-2. Define exactly one phase. Include:
+1. Read the project's `CLAUDE.md`, `STATE.md`, `PHASE_HANDOFF.md`, and other active-truth files.
+2. Define exactly one phase:
    - objective
    - non-goals
    - changed files
    - smallest acceptable version
    - verification
 3. Keep the phase narrow enough to finish or block cleanly in one focused session.
-4. Prefer the smallest change set that materially improves repo quality.
-5. Write the exact next step in a form that can be resumed without re-discovery.
+4. Prefer the smallest plan that materially improves the project.
+5. Leave a resumable next exact step.

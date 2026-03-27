@@ -213,7 +213,8 @@ function blockingIssuesFor(scope) {
     if (
       issue.code === 'unsupported-schema-version' ||
       issue.code === 'missing-schema-version' ||
-      issue.code === 'corrupted-meta'
+      issue.code === 'corrupted-meta' ||
+      issue.code === 'invalid-meta'
     ) {
       return true;
     }

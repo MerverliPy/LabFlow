@@ -11,8 +11,9 @@
     "format:check": "prettier --check .",
     "lint": "pnpm -r --if-present run lint",
     "test": "pnpm -r --if-present run test",
-    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm build",
-    "proof:verify": "pnpm --dir packages/proof-sdk run verify"
+    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm build && pnpm proof:verify",
+    "proof:verify": "pnpm --dir packages/proof-sdk run verify",
+    "release:readiness": "pnpm verify && bash scripts/packed-install-smoke.sh"
   },
   "devDependencies": {
     "prettier": "^3.4.2"

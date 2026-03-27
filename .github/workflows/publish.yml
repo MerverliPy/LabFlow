@@ -39,8 +39,11 @@ jobs:
             pnpm install
           fi
 
-      - name: Pack CLI
-        run: pnpm --dir packages/cli pack
+      - name: Verify workspace
+        run: pnpm verify
+
+      - name: Packed-install smoke test
+        run: bash scripts/packed-install-smoke.sh
 
       - name: Publish CLI
         working-directory: packages/cli

@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { isMainModule } from '../packages/core/src/runtime.mjs';
+
 function loadJson(filePath) {
   return JSON.parse(fs.readFileSync(filePath, 'utf8'));
 }
@@ -99,7 +101,7 @@ export function writeGeneratedDocs(root = process.cwd()) {
   return Object.keys(docs);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   writeGeneratedDocs(process.cwd());
   console.log('generated docs updated');
 }

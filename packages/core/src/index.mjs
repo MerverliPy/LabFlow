@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { isMainModule } from './runtime.mjs';
+
 export const CORE_PHASE = 'phase-2-minimal-stable-core';
 export const CORE_SCOPE = 'stateful terminal-first surface';
 
@@ -70,6 +72,6 @@ export function implementationCounts(manifest) {
   return counts;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMainModule(import.meta.url)) {
   console.log(`${CORE_PHASE} :: ${CORE_SCOPE}`);
 }

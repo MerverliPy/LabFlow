@@ -24,6 +24,7 @@ For any non-trivial task:
 ## When to skip planning
 
 You may skip Plan Mode only for:
+
 - obvious one-file fixes
 - trivial docs edits
 - narrow typo or config changes
@@ -31,6 +32,7 @@ You may skip Plan Mode only for:
 ## When to use isolated agents
 
 Use:
+
 - `repo-architect` for structure and boundary decisions
 - `verifier` for isolated verification analysis
 - `refactor-worktree` for risky multi-file refactors

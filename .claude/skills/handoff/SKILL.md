@@ -8,6 +8,7 @@ description: Write a compact resume note with current objective, changed files, 
 Update `PHASE_HANDOFF.md` so another Claude Code session can resume without rediscovery.
 
 Include only:
+
 - objective
 - changed files
 - delivered behavior

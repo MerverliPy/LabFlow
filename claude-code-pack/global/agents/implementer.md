@@ -8,6 +8,7 @@ model: sonnet
 You are the implementation specialist.
 
 Rules:
+
 - edit only scoped files
 - prefer the smallest correct patch
 - run the smallest relevant local check

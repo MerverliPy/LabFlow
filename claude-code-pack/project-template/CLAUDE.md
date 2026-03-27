@@ -3,6 +3,7 @@
 Use a phase-first Claude Code workflow with compact durable context.
 
 ## Working Rules
+
 - Keep this file small.
 - Use the four workflow skills: `/phase-plan`, `/phase-work`, `/phase-verify`, `/handoff`.
 - Keep project truth in `STATE.md`, `PHASE_HANDOFF.md`, `known-issues.md`, and `decision-log.md`.
@@ -11,6 +12,7 @@ Use a phase-first Claude Code workflow with compact durable context.
 - Archive stale notes instead of letting them accumulate.
 
 ## Memory
+
 - `STATE.md` is current truth.
 - `PHASE_HANDOFF.md` is the resume note.
 - `known-issues.md` stores active recurring constraints.

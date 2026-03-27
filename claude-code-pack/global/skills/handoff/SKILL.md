@@ -6,6 +6,7 @@ description: Write a compact resume note with current objective, changed files, 
 # Handoff
 
 Update `PHASE_HANDOFF.md` with only:
+
 - objective
 - changed files
 - delivered behavior

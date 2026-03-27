@@ -1,12 +1,14 @@
 # Skill Map
 
 ## Maintained skills
+
 - `phase-plan`
 - `phase-work`
 - `phase-verify`
 - `handoff`
 
 ## Removed to reduce command sprawl
+
 - `phase-close`
 - `resume-latest`
 - `review-worktree`

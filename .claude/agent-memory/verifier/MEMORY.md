@@ -3,6 +3,7 @@
 Keep this file compact.
 
 Store only durable verification learnings:
+
 - smallest reliable command for a package or subsystem
 - recurring failure signatures
 - known flaky checks and how to interpret them

@@ -8,11 +8,5 @@
   },
   "repository": "https://github.com/MerverliPy/LabFlow",
   "license": "MIT",
-  "keywords": [
-    "claude-code",
-    "plugin",
-    "workflow",
-    "skills",
-    "agents"
-  ]
+  "keywords": ["claude-code", "plugin", "workflow", "skills", "agents"]
 }

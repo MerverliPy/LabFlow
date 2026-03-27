@@ -3,6 +3,7 @@
 Keep this file compact.
 
 Store only durable repo facts:
+
 - stable directory boundaries
 - canonical workflow files
 - command contracts that repeatedly matter

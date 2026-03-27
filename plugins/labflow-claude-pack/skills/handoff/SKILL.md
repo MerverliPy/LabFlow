@@ -6,6 +6,7 @@ effort: low
 ---
 
 Update `PHASE_HANDOFF.md` with:
+
 - objective
 - changed files
 - verification run and result

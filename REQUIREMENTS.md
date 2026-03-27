@@ -1,6 +1,7 @@
 # Requirements
 
 ## Stable commands
+
 - `init`
 - `task`
 - `session`
@@ -9,19 +10,23 @@
 - `doctor`
 
 ## Experimental
+
 - providers
 - security
 - deploy
 - codex
 
 ## Parked
+
 - swarm
 - neural
 - learn
 - giant agent catalogs
 
 ## Promotion rule
+
 No experimental or parked area moves to stable without:
+
 - owner
 - tests
 - docs

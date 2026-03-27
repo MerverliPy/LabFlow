@@ -1,11 +1,29 @@
 {
   "name": "@labflow/cli",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
+  "bin": {
+    "labflow": "./src/index.mjs"
+  },
+  "exports": {
+    ".": "./src/index.mjs"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "AGENTS.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "node --check src/index.mjs",
-    "typecheck": "echo typecheck-cli",
+    "lint": "node --check src/index.mjs",
+    "typecheck": "node --check src/index.mjs",
     "test": "node src/index.mjs --help && node src/index.mjs doctor --json && node src/index.mjs status --json"
   },
   "repository": {
@@ -15,5 +33,11 @@
   "bugs": {
     "url": "https://github.com/MerverliPy/LabFlow/issues"
   },
-  "homepage": "https://github.com/MerverliPy/LabFlow"
+  "homepage": "https://github.com/MerverliPy/LabFlow#readme",
+  "keywords": [
+    "cli",
+    "workspace",
+    "developer-tools",
+    "terminal"
+  ]
 }

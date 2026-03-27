@@ -28,7 +28,10 @@ export function isMainModule(importMetaUrl, argv1 = process.argv[1]) {
   if (!argv1) return false;
 
   try {
-    return normalizeMainPath(fileURLToPath(importMetaUrl)) === normalizeMainPath(argv1);
+    return (
+      normalizeMainPath(fileURLToPath(importMetaUrl)) ===
+      normalizeMainPath(argv1)
+    );
   } catch {
     return false;
   }

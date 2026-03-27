@@ -106,7 +106,8 @@ function safeReadJson(filePath, fallback, code, issues) {
 function ensureMemoryFile(workspaceRoot) {
   const files = workspaceFiles(workspaceRoot);
   ensureStateDir(workspaceRoot);
-  if (!fs.existsSync(files.memory)) fs.writeFileSync(files.memory, defaultMemoryDocument());
+  if (!fs.existsSync(files.memory))
+    fs.writeFileSync(files.memory, defaultMemoryDocument());
   return files.memory;
 }
 
@@ -154,18 +155,32 @@ export function isInitialized(workspaceRoot) {
 
 export function migrateWorkspaceState(workspaceRoot) {
   const files = workspaceFiles(workspaceRoot);
-  if (!fs.existsSync(files.meta)) return { migrated: false, fromVersion: null, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
+  if (!fs.existsSync(files.meta))
+    return {
+      migrated: false,
+      fromVersion: null,
+      toVersion: SUPPORTED_STATE_SCHEMA_VERSION
+    };
 
   let meta;
   try {
     meta = JSON.parse(fs.readFileSync(files.meta, 'utf8'));
   } catch {
-    return { migrated: false, fromVersion: null, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
+    return {
+      migrated: false,
+      fromVersion: null,
+      toVersion: SUPPORTED_STATE_SCHEMA_VERSION
+    };
   }
 
-  const fromVersion = typeof meta.schemaVersion === 'number' ? meta.schemaVersion : 0;
+  const fromVersion =
+    typeof meta.schemaVersion === 'number' ? meta.schemaVersion : 0;
   if (fromVersion >= SUPPORTED_STATE_SCHEMA_VERSION) {
-    return { migrated: false, fromVersion, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
+    return {
+      migrated: false,
+      fromVersion,
+      toVersion: SUPPORTED_STATE_SCHEMA_VERSION
+    };
   }
 
   const next = {
@@ -175,7 +190,11 @@ export function migrateWorkspaceState(workspaceRoot) {
     migratedAt: isoNow()
   };
   writeJson(files.meta, next);
-  return { migrated: true, fromVersion, toVersion: SUPPORTED_STATE_SCHEMA_VERSION };
+  return {
+    migrated: true,
+    fromVersion,
+    toVersion: SUPPORTED_STATE_SCHEMA_VERSION
+  };
 }
 
 export function inspectWorkspaceState(workspaceRoot) {
@@ -184,7 +203,12 @@ export function inspectWorkspaceState(workspaceRoot) {
   const issues = [];
 
   if (!fs.existsSync(files.meta)) {
-    if (stateDirExists && (fs.existsSync(files.tasks) || fs.existsSync(files.session) || fs.existsSync(files.memory))) {
+    if (
+      stateDirExists &&
+      (fs.existsSync(files.tasks) ||
+        fs.existsSync(files.session) ||
+        fs.existsSync(files.memory))
+    ) {
       pushIssue(issues, {
         code: 'missing-meta',
         file: files.meta,
@@ -200,7 +224,8 @@ export function inspectWorkspaceState(workspaceRoot) {
   }
 
   const meta = safeReadJson(files.meta, defaultMeta(), 'meta', issues);
-  const schemaVersion = typeof meta.schemaVersion === 'number' ? meta.schemaVersion : null;
+  const schemaVersion =
+    typeof meta.schemaVersion === 'number' ? meta.schemaVersion : null;
   if (schemaVersion === null) {
     pushIssue(issues, {
       code: 'missing-schema-version',
@@ -234,15 +259,25 @@ export function inspectWorkspaceState(workspaceRoot) {
 }
 
 export function readMeta(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).meta, defaultMeta(), 'meta');
+  return safeReadJson(
+    workspaceFiles(workspaceRoot).meta,
+    defaultMeta(),
+    'meta'
+  );
 }
 
 export function readTasks(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).tasks, defaultTasks(), 'tasks');
+  return safeReadJson(
+    workspaceFiles(workspaceRoot).tasks,
+    defaultTasks(),
+    'tasks'
+  );
 }
 
 export function findTask(workspaceRoot, taskId) {
-  return readTasks(workspaceRoot).items.find((item) => item.id === taskId) || null;
+  return (
+    readTasks(workspaceRoot).items.find((item) => item.id === taskId) || null
+  );
 }
 
 export function addTask(workspaceRoot, title) {
@@ -292,11 +327,18 @@ export function removeTask(workspaceRoot, taskId) {
 }
 
 export function readSession(workspaceRoot) {
-  return safeReadJson(workspaceFiles(workspaceRoot).session, defaultSession(), 'session');
+  return safeReadJson(
+    workspaceFiles(workspaceRoot).session,
+    defaultSession(),
+    'session'
+  );
 }
 
 function createSessionId() {
-  const stamp = new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 14);
+  const stamp = new Date()
+    .toISOString()
+    .replace(/[-:.TZ]/g, '')
+    .slice(0, 14);
   return `session-${stamp}`;
 }
 
@@ -359,7 +401,11 @@ export function appendMemoryNote(workspaceRoot, text, tag = null) {
   if (tag && !tag.trim()) throw new Error('Memory note tag cannot be empty.');
   const filePath = ensureMemoryFile(workspaceRoot);
   const timestamp = isoNow();
-  const note = formatMemoryNote(timestamp, text.trim(), tag ? tag.trim() : null);
+  const note = formatMemoryNote(
+    timestamp,
+    text.trim(),
+    tag ? tag.trim() : null
+  );
   fs.appendFileSync(filePath, note);
   return {
     path: filePath,
@@ -371,7 +417,10 @@ export function appendMemoryNote(workspaceRoot, text, tag = null) {
 export function readMemoryEntries(workspaceRoot) {
   const filePath = workspaceFiles(workspaceRoot).memory;
   if (!fs.existsSync(filePath)) return [];
-  const lines = fs.readFileSync(filePath, 'utf8').split(/\r?\n/).filter(Boolean);
+  const lines = fs
+    .readFileSync(filePath, 'utf8')
+    .split(/\r?\n/)
+    .filter(Boolean);
   return lines.map(parseMemoryNoteLine).filter(Boolean);
 }
 

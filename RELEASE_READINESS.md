@@ -25,6 +25,7 @@ pnpm release:readiness
 ## Decision rule
 
 Treat the package as publish-ready after:
+
 1. local proof passes
 2. dry-run publish passes
 3. real npm publish succeeds

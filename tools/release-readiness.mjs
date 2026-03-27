@@ -2,8 +2,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const manifest = JSON.parse(fs.readFileSync(path.join(root, 'config', 'stable-command-manifest.json'), 'utf8'));
-const packageJson = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const manifest = JSON.parse(
+  fs.readFileSync(
+    path.join(root, 'config', 'stable-command-manifest.json'),
+    'utf8'
+  )
+);
+const packageJson = JSON.parse(
+  fs.readFileSync(path.join(root, 'package.json'), 'utf8')
+);
 
 const checks = [
   {
@@ -29,17 +36,24 @@ const checks = [
   {
     name: 'private package mode',
     ok: packageJson.private !== true,
-    detail: 'package.json still marks the repo private, which is correct for unreleased source-only use but blocks publish.'
+    detail:
+      'package.json still marks the repo private, which is correct for unreleased source-only use but blocks publish.'
   }
 ];
 
 const blockers = checks.filter((item) => !item.ok);
 
-console.log(JSON.stringify({
-  releaseReady: blockers.length === 0,
-  blockers,
-  checks
-}, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      releaseReady: blockers.length === 0,
+      blockers,
+      checks
+    },
+    null,
+    2
+  )
+);
 
 if (process.argv.includes('--enforce') && blockers.length > 0) {
   process.exit(1);

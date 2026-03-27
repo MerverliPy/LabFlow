@@ -1,0 +1,9 @@
+{
+  "label": "after-removing-session-file",
+  "workspacePath": "/tmp/labflow-proof-K7ZkwG",
+  "files": {
+    ".labflow/memory.md": "# LabFlow Memory\n\nWorkspace notes written by `labflow memory append`.\n- 2026-03-27T01:33:13.438Z [tag:release] :: Lock docs before publish\n- 2026-03-27T01:33:13.470Z :: Proof failures should be replayable\n",
+    ".labflow/meta.json": "{\n  \"schemaVersion\": 1,\n  \"productName\": \"LabFlow\",\n  \"cliName\": \"labflow\",\n  \"initializedAt\": \"2026-03-27T01:33:12.949Z\",\n  \"stableCommands\": [\n    \"init\",\n    \"task\",\n    \"session\",\n    \"memory\",\n    \"status\",\n    \"doctor\"\n  ],\n  \"migratedAt\": null,\n  \"nextTaskId\": 3\n}\n",
+    ".labflow/tasks.json": "{broken"
+  }
+}

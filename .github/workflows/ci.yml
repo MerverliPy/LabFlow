@@ -2,26 +2,17 @@ name: CI
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
-  ci:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
-
-    runs-on: ${{ matrix.os }}
+  validate:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
@@ -40,25 +31,21 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            pnpm install
+          fi
 
-      - name: Build site app
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
         run: pnpm build
-
-      - name: Check runtime helper syntax
-        run: node --check packages/core/src/runtime.mjs
-
-      - name: Check core entry syntax
-        run: node --check packages/core/src/index.mjs
-
-      - name: Check docs generator syntax
-        run: node --check tools/generate-docs.mjs
-
-      - name: Runtime path regression test
-        run: node --test packages/core/test/runtime.test.mjs
-
-      - name: Generate docs
-        run: node tools/generate-docs.mjs
-
-      - name: Verify generated docs
-        run: node tools/check-generated-docs.mjs

@@ -9,7 +9,11 @@ export const CORE_SCOPE = 'stateful terminal-first surface';
 export function findRepoRoot(startDir) {
   let current = path.resolve(startDir);
   while (true) {
-    const candidate = path.join(current, 'config', 'stable-command-manifest.json');
+    const candidate = path.join(
+      current,
+      'config',
+      'stable-command-manifest.json'
+    );
     if (fs.existsSync(candidate)) return current;
     const parent = path.dirname(current);
     if (parent === current) return null;
@@ -22,7 +26,11 @@ export function resolveManifest(candidateDirs) {
     if (!candidate) continue;
     const repoRoot = findRepoRoot(candidate);
     if (!repoRoot) continue;
-    const manifestPath = path.join(repoRoot, 'config', 'stable-command-manifest.json');
+    const manifestPath = path.join(
+      repoRoot,
+      'config',
+      'stable-command-manifest.json'
+    );
     return {
       repoRoot,
       manifestPath,
@@ -30,7 +38,9 @@ export function resolveManifest(candidateDirs) {
     };
   }
 
-  throw new Error('Unable to locate config/stable-command-manifest.json from the current working directory or package path.');
+  throw new Error(
+    'Unable to locate config/stable-command-manifest.json from the current working directory or package path.'
+  );
 }
 
 export function getWorkspaceRoot(cwd = process.cwd()) {

@@ -8,7 +8,9 @@ function loadJson(filePath) {
 }
 
 export function buildGeneratedDocs(root = process.cwd()) {
-  const manifest = loadJson(path.join(root, 'config', 'stable-command-manifest.json'));
+  const manifest = loadJson(
+    path.join(root, 'config', 'stable-command-manifest.json')
+  );
   const packageJson = loadJson(path.join(root, 'package.json'));
   const bt = '`'.repeat(3);
 
@@ -20,7 +22,9 @@ export function buildGeneratedDocs(root = process.cwd()) {
     })
     .join('\n');
 
-  const experimental = manifest.experimentalAreas.map((value) => `- ${value}`).join('\n');
+  const experimental = manifest.experimentalAreas
+    .map((value) => `- ${value}`)
+    .join('\n');
   const parked = manifest.parkedAreas.map((value) => `- ${value}`).join('\n');
 
   const privateMode = packageJson.private === true ? 'true' : 'false';

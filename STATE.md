@@ -1,7 +1,14 @@
 # State
 
 ## Current phase
-Phase 3 — Proof and release hardening
+
+Phase 4 — Claude Code utility-pack conversion and audit hardening
 
 ## Immediate next step
-Generate `pnpm-lock.yaml` in a networked environment, set real repo/homepage/issues metadata, and verify installed execution before enabling public package docs.
+
+Use the new `claude-code-pack/` install scripts in a real Claude Code environment, confirm the four-skill flow feels natural, and trim any low-value instructions discovered during that smoke test.
+
+## Last verification result
+
+- Claude pack audit: pending fresh runtime check after repo export
+- Structural file audit: passed locally after pack creation

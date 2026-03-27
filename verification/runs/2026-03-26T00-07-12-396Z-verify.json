@@ -1,0 +1,40 @@
+{
+  "mode": "verify",
+  "status": "failed",
+  "repoRoot": "/home/calvin/LabFlow",
+  "workspace": "/tmp/labflow-proof-8eZKiV",
+  "checks": [
+    {
+      "name": "help surface",
+      "status": "passed"
+    },
+    {
+      "name": "doctor json identity",
+      "status": "failed",
+      "error": "doctor privatePackage drift"
+    }
+  ],
+  "failureMessage": "doctor privatePackage drift",
+  "transcripts": {
+    "help": {
+      "args": [
+        "--help"
+      ],
+      "cwd": "/home/calvin/LabFlow",
+      "status": 0,
+      "stdout": "labflow <command> [options]\n\nStable command surface:\n- init [implemented] :: bootstrap or repair .labflow workspace state files in the current directory\n- task [implemented-minimal] :: add, list, show, complete, reopen, and remove lightweight workspace tasks\n- session [implemented-minimal] :: start, inspect, replace, and close the active workspace session\n- memory [implemented-minimal] :: append tagged notes and inspect workspace memory state\n- status [implemented] :: report workspace state, schema health, and proof visibility with optional json\n- doctor [implemented] :: print canonical identity, environment basics, and detect known legacy binaries\n\nNotable subcommands:\n- task add|list|show|done|reopen|remove [--json]\n- session start|show|history|close [--json] [--replace]\n- memory append|show [--json] [--tag <tag>]\n- status [--json]\n- doctor [--json]\n\nCurrent repo phase:\n- Phase 3 — Proof and release hardening\n- Public npm / npx install is intentionally disabled until publish readiness is proven.\n",
+      "stderr": ""
+    },
+    "doctorJson": {
+      "args": [
+        "doctor",
+        "--json"
+      ],
+      "cwd": "/home/calvin/LabFlow",
+      "status": 0,
+      "stdout": "{\n  \"product\": {\n    \"productName\": \"LabFlow\",\n    \"packageName\": \"labflow\",\n    \"cliName\": \"labflow\",\n    \"repoUrl\": \"https://github.com/MerverliPy/LabFlow\",\n    \"homepageUrl\": \"https://2b7e628c-labflow.calvinbrady8.workers.dev\",\n    \"issuesUrl\": \"https://github.com/MerverliPy/LabFlow/issues\"\n  },\n  \"workspaceRoot\": \"/home/calvin/LabFlow\",\n  \"stateDir\": \"/home/calvin/LabFlow/.labflow\",\n  \"repoRoot\": \"/home/calvin/LabFlow\",\n  \"manifestPath\": \"/home/calvin/LabFlow/config/stable-command-manifest.json\",\n  \"nodeVersion\": \"v20.20.1\",\n  \"platform\": \"linux 6.6.87.2-microsoft-standard-WSL2\",\n  \"packageManager\": \"pnpm@10.0.0\",\n  \"privatePackage\": false,\n  \"supportedSchemaVersion\": 1,\n  \"legacyBinaries\": [\n    \"ruflo\",\n    \"claude-flow\"\n  ]\n}\n",
+      "stderr": ""
+    }
+  },
+  "snapshots": []
+}

@@ -1,0 +1,300 @@
+{
+  "help": {
+    "args": [
+      "--help"
+    ],
+    "cwd": "/home/calvin/LabFlow",
+    "status": 0,
+    "stdout": "labflow <command> [options]\n\nStable command surface:\n- init [implemented] :: bootstrap or repair .labflow workspace state files in the current directory\n- task [implemented-minimal] :: add, list, show, complete, reopen, and remove lightweight workspace tasks\n- session [implemented-minimal] :: start, inspect, replace, and close the active workspace session\n- memory [implemented-minimal] :: append tagged notes and inspect workspace memory state\n- status [implemented] :: report workspace state, schema health, and proof visibility with optional json\n- doctor [implemented] :: print canonical identity, environment basics, and detect known legacy binaries\n\nNotable subcommands:\n- task add|list|show|done|reopen|remove [--json]\n- session start|show|history|close [--json] [--replace]\n- memory append|show [--json] [--tag <tag>]\n- status [--json]\n- doctor [--json]\n\nCurrent repo phase:\n- Phase 3 — Proof and release hardening\n- Local packed install has been verified. Public npm publish is not complete yet.\n",
+    "stderr": ""
+  },
+  "doctorJson": {
+    "args": [
+      "doctor",
+      "--json"
+    ],
+    "cwd": "/home/calvin/LabFlow",
+    "status": 0,
+    "stdout": "{\n  \"product\": {\n    \"productName\": \"LabFlow\",\n    \"packageName\": \"labflow\",\n    \"cliName\": \"labflow\",\n    \"repoUrl\": \"https://github.com/MerverliPy/LabFlow.git\",\n    \"homepageUrl\": \"https://github.com/MerverliPy/LabFlow\",\n    \"issuesUrl\": \"https://github.com/MerverliPy/LabFlow/issues\"\n  },\n  \"workspaceRoot\": \"/home/calvin/LabFlow\",\n  \"stateDir\": \"/home/calvin/LabFlow/.labflow\",\n  \"repoRoot\": \"/home/calvin/LabFlow\",\n  \"manifestPath\": \"/home/calvin/LabFlow/config/stable-command-manifest.json\",\n  \"nodeVersion\": \"v20.20.1\",\n  \"platform\": \"linux 6.6.87.2-microsoft-standard-WSL2\",\n  \"packageManager\": \"pnpm@10.0.0\",\n  \"privatePackage\": false,\n  \"supportedSchemaVersion\": 1,\n  \"legacyBinaries\": [\n    \"ruflo\",\n    \"claude-flow\"\n  ]\n}\n",
+    "stderr": ""
+  },
+  "statusBeforeInit": {
+    "args": [
+      "status",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"product\": \"LabFlow\",\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"initialized\": false,\n  \"repoPhase\": \"Phase 3 — Proof and release hardening\",\n  \"schemaVersion\": null,\n  \"supportedSchemaVersion\": 1,\n  \"implementation\": {\n    \"implemented\": 3,\n    \"minimal\": 3,\n    \"planned\": 0\n  },\n  \"tasks\": {\n    \"open\": 0,\n    \"total\": 0\n  },\n  \"memory\": {\n    \"notes\": 0\n  },\n  \"session\": {\n    \"active\": null,\n    \"historyCount\": 0\n  },\n  \"stateIssues\": [],\n  \"latestProofArtifact\": \"2026-03-26T05-52-14-461Z-verify.json\"\n}\n",
+    "stderr": ""
+  },
+  "initFirst": {
+    "args": [
+      "init",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"created\": [\n    \".labflow/meta.json\",\n    \".labflow/tasks.json\",\n    \".labflow/session.json\",\n    \".labflow/memory.md\"\n  ],\n  \"existing\": [],\n  \"idempotent\": false,\n  \"migration\": {\n    \"migrated\": false,\n    \"fromVersion\": null,\n    \"toVersion\": 1\n  }\n}\n",
+    "stderr": ""
+  },
+  "initSecond": {
+    "args": [
+      "init",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"created\": [],\n  \"existing\": [\n    \".labflow/meta.json\",\n    \".labflow/tasks.json\",\n    \".labflow/session.json\",\n    \".labflow/memory.md\"\n  ],\n  \"idempotent\": true,\n  \"migration\": {\n    \"migrated\": false,\n    \"fromVersion\": 1,\n    \"toVersion\": 1\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskAddA": {
+    "args": [
+      "task",
+      "add",
+      "Ship release hardening",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"task\": {\n    \"id\": \"task-001\",\n    \"title\": \"Ship release hardening\",\n    \"status\": \"open\",\n    \"createdAt\": \"2026-03-26T12:31:13.805Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskAddB": {
+    "args": [
+      "task",
+      "add",
+      "Document state contract",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"task\": {\n    \"id\": \"task-002\",\n    \"title\": \"Document state contract\",\n    \"status\": \"open\",\n    \"createdAt\": \"2026-03-26T12:31:13.835Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskShow": {
+    "args": [
+      "task",
+      "show",
+      "task-001",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"task\": {\n    \"id\": \"task-001\",\n    \"title\": \"Ship release hardening\",\n    \"status\": \"open\",\n    \"createdAt\": \"2026-03-26T12:31:13.805Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskInvalidDone": {
+    "args": [
+      "task",
+      "done",
+      "task-999"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 1,
+    "stdout": "",
+    "stderr": "Task not found: task-999\n"
+  },
+  "taskDone": {
+    "args": [
+      "task",
+      "done",
+      "task-001",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"task\": {\n    \"id\": \"task-001\",\n    \"title\": \"Ship release hardening\",\n    \"status\": \"done\",\n    \"createdAt\": \"2026-03-26T12:31:13.805Z\",\n    \"completedAt\": \"2026-03-26T12:31:13.926Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskReopen": {
+    "args": [
+      "task",
+      "reopen",
+      "task-001",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"task\": {\n    \"id\": \"task-001\",\n    \"title\": \"Ship release hardening\",\n    \"status\": \"open\",\n    \"createdAt\": \"2026-03-26T12:31:13.805Z\",\n    \"reopenedAt\": \"2026-03-26T12:31:13.955Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskRemove": {
+    "args": [
+      "task",
+      "remove",
+      "task-002",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"removed\": {\n    \"id\": \"task-002\",\n    \"title\": \"Document state contract\",\n    \"status\": \"open\",\n    \"createdAt\": \"2026-03-26T12:31:13.835Z\",\n    \"removedAt\": \"2026-03-26T12:31:13.985Z\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "taskList": {
+    "args": [
+      "task",
+      "list",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"items\": [\n    {\n      \"id\": \"task-001\",\n      \"title\": \"Ship release hardening\",\n      \"status\": \"open\",\n      \"createdAt\": \"2026-03-26T12:31:13.805Z\",\n      \"reopenedAt\": \"2026-03-26T12:31:13.955Z\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  "sessionStart": {
+    "args": [
+      "session",
+      "start",
+      "phase-3-hardening",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"session\": {\n    \"id\": \"session-20260326123114\",\n    \"label\": \"phase-3-hardening\",\n    \"startedAt\": \"2026-03-26T12:31:14.046Z\"\n  },\n  \"replaced\": false\n}\n",
+    "stderr": ""
+  },
+  "sessionConflict": {
+    "args": [
+      "session",
+      "start",
+      "parallel-attempt"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 1,
+    "stdout": "",
+    "stderr": "Active session already exists: session-20260326123114 (phase-3-hardening). Close it first or use 'labflow session start --replace <label>'.\n"
+  },
+  "sessionReplace": {
+    "args": [
+      "session",
+      "start",
+      "--replace",
+      "phase-3-replaced",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"session\": {\n    \"id\": \"session-20260326123114\",\n    \"label\": \"phase-3-replaced\",\n    \"startedAt\": \"2026-03-26T12:31:14.107Z\"\n  },\n  \"replaced\": true\n}\n",
+    "stderr": ""
+  },
+  "sessionHistory": {
+    "args": [
+      "session",
+      "history",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"history\": [\n    {\n      \"id\": \"session-20260326123114\",\n      \"label\": \"phase-3-hardening\",\n      \"startedAt\": \"2026-03-26T12:31:14.046Z\",\n      \"endedAt\": \"2026-03-26T12:31:14.107Z\",\n      \"endedReason\": \"replaced\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  "sessionClose": {
+    "args": [
+      "session",
+      "close",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"closed\": {\n    \"id\": \"session-20260326123114\",\n    \"label\": \"phase-3-replaced\",\n    \"startedAt\": \"2026-03-26T12:31:14.107Z\",\n    \"endedAt\": \"2026-03-26T12:31:14.169Z\",\n    \"endedReason\": \"closed\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "memoryAppendOne": {
+    "args": [
+      "memory",
+      "append",
+      "--tag",
+      "release",
+      "Lock docs before publish",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"path\": \"/tmp/labflow-proof-e9wchz/.labflow/memory.md\",\n  \"note\": \"- 2026-03-26T12:31:14.199Z [tag:release] :: Lock docs before publish\\n\",\n  \"entry\": {\n    \"timestamp\": \"2026-03-26T12:31:14.199Z\",\n    \"tag\": \"release\",\n    \"text\": \"Lock docs before publish\",\n    \"raw\": \"- 2026-03-26T12:31:14.199Z [tag:release] :: Lock docs before publish\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "memoryAppendTwo": {
+    "args": [
+      "memory",
+      "append",
+      "Proof failures should be replayable",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"path\": \"/tmp/labflow-proof-e9wchz/.labflow/memory.md\",\n  \"note\": \"- 2026-03-26T12:31:14.229Z :: Proof failures should be replayable\\n\",\n  \"entry\": {\n    \"timestamp\": \"2026-03-26T12:31:14.229Z\",\n    \"tag\": null,\n    \"text\": \"Proof failures should be replayable\",\n    \"raw\": \"- 2026-03-26T12:31:14.229Z :: Proof failures should be replayable\"\n  }\n}\n",
+    "stderr": ""
+  },
+  "memoryShow": {
+    "args": [
+      "memory",
+      "show",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"path\": \"/tmp/labflow-proof-e9wchz/.labflow/memory.md\",\n  \"lines\": 4,\n  \"notes\": 2,\n  \"entries\": [\n    {\n      \"timestamp\": \"2026-03-26T12:31:14.199Z\",\n      \"tag\": \"release\",\n      \"text\": \"Lock docs before publish\",\n      \"raw\": \"- 2026-03-26T12:31:14.199Z [tag:release] :: Lock docs before publish\"\n    },\n    {\n      \"timestamp\": \"2026-03-26T12:31:14.229Z\",\n      \"tag\": null,\n      \"text\": \"Proof failures should be replayable\",\n      \"raw\": \"- 2026-03-26T12:31:14.229Z :: Proof failures should be replayable\"\n    }\n  ]\n}\n",
+    "stderr": ""
+  },
+  "statusAfterWorkflow": {
+    "args": [
+      "status",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"product\": \"LabFlow\",\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"initialized\": true,\n  \"repoPhase\": \"Phase 3 — Proof and release hardening\",\n  \"schemaVersion\": 1,\n  \"supportedSchemaVersion\": 1,\n  \"implementation\": {\n    \"implemented\": 3,\n    \"minimal\": 3,\n    \"planned\": 0\n  },\n  \"tasks\": {\n    \"open\": 1,\n    \"total\": 1\n  },\n  \"memory\": {\n    \"notes\": 2\n  },\n  \"session\": {\n    \"active\": null,\n    \"historyCount\": 2\n  },\n  \"stateIssues\": [],\n  \"latestProofArtifact\": \"2026-03-26T05-52-14-461Z-verify.json\"\n}\n",
+    "stderr": ""
+  },
+  "statusCorruptedTasks": {
+    "args": [
+      "status",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"product\": \"LabFlow\",\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"initialized\": true,\n  \"repoPhase\": \"Phase 3 — Proof and release hardening\",\n  \"schemaVersion\": 1,\n  \"supportedSchemaVersion\": 1,\n  \"implementation\": {\n    \"implemented\": 3,\n    \"minimal\": 3,\n    \"planned\": 0\n  },\n  \"tasks\": {\n    \"open\": 0,\n    \"total\": 0\n  },\n  \"memory\": {\n    \"notes\": 2\n  },\n  \"session\": {\n    \"active\": null,\n    \"historyCount\": 2\n  },\n  \"stateIssues\": [\n    {\n      \"severity\": \"error\",\n      \"code\": \"corrupted-tasks\",\n      \"file\": \"/tmp/labflow-proof-e9wchz/.labflow/tasks.json\",\n      \"message\": \"State file is not valid JSON: tasks.json\",\n      \"detail\": \"Expected property name or '}' in JSON at position 1\"\n    }\n  ],\n  \"latestProofArtifact\": \"2026-03-26T05-52-14-461Z-verify.json\"\n}\n",
+    "stderr": ""
+  },
+  "taskBlockedOnCorruption": {
+    "args": [
+      "task",
+      "list"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 2,
+    "stdout": "",
+    "stderr": "Workspace state is not healthy for 'task'. State file is not valid JSON: tasks.json Run 'labflow status --json' or 'labflow init' to inspect and repair missing files.\n"
+  },
+  "recoveryInit": {
+    "args": [
+      "init",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"created\": [],\n  \"existing\": [\n    \".labflow/meta.json\",\n    \".labflow/tasks.json\",\n    \".labflow/session.json\",\n    \".labflow/memory.md\"\n  ],\n  \"idempotent\": true,\n  \"migration\": {\n    \"migrated\": false,\n    \"fromVersion\": 1,\n    \"toVersion\": 1\n  }\n}\n",
+    "stderr": ""
+  },
+  "statusMissingSession": {
+    "args": [
+      "status",
+      "--json"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 0,
+    "stdout": "{\n  \"product\": \"LabFlow\",\n  \"workspaceRoot\": \"/tmp/labflow-proof-e9wchz\",\n  \"stateDir\": \"/tmp/labflow-proof-e9wchz/.labflow\",\n  \"initialized\": true,\n  \"repoPhase\": \"Phase 3 — Proof and release hardening\",\n  \"schemaVersion\": 1,\n  \"supportedSchemaVersion\": 1,\n  \"implementation\": {\n    \"implemented\": 3,\n    \"minimal\": 3,\n    \"planned\": 0\n  },\n  \"tasks\": {\n    \"open\": 0,\n    \"total\": 0\n  },\n  \"memory\": {\n    \"notes\": 2\n  },\n  \"session\": {\n    \"active\": null,\n    \"historyCount\": 0\n  },\n  \"stateIssues\": [\n    {\n      \"severity\": \"error\",\n      \"code\": \"corrupted-tasks\",\n      \"file\": \"/tmp/labflow-proof-e9wchz/.labflow/tasks.json\",\n      \"message\": \"State file is not valid JSON: tasks.json\",\n      \"detail\": \"Expected property name or '}' in JSON at position 1\"\n    },\n    {\n      \"severity\": \"error\",\n      \"code\": \"missing-session\",\n      \"file\": \"/tmp/labflow-proof-e9wchz/.labflow/session.json\",\n      \"message\": \"State file is missing: session.json\"\n    }\n  ],\n  \"latestProofArtifact\": \"2026-03-26T05-52-14-461Z-verify.json\"\n}\n",
+    "stderr": ""
+  },
+  "sessionBlockedOnMissingFile": {
+    "args": [
+      "session",
+      "show"
+    ],
+    "cwd": "/tmp/labflow-proof-e9wchz",
+    "status": 2,
+    "stdout": "",
+    "stderr": "Workspace state is not healthy for 'session'. State file is missing: session.json Run 'labflow status --json' or 'labflow init' to inspect and repair missing files.\n"
+  }
+}

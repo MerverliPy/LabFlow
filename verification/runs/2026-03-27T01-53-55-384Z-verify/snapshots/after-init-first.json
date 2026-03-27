@@ -1,0 +1,10 @@
+{
+  "label": "after-init-first",
+  "workspacePath": "/tmp/labflow-proof-4wHfya",
+  "files": {
+    ".labflow/memory.md": "# LabFlow Memory\n\nWorkspace notes written by `labflow memory append`.\n",
+    ".labflow/meta.json": "{\n  \"schemaVersion\": 1,\n  \"productName\": \"LabFlow\",\n  \"cliName\": \"labflow\",\n  \"initializedAt\": \"2026-03-27T01:53:55.524Z\",\n  \"stableCommands\": [\n    \"init\",\n    \"task\",\n    \"session\",\n    \"memory\",\n    \"status\",\n    \"doctor\"\n  ],\n  \"migratedAt\": null,\n  \"nextTaskId\": 1\n}\n",
+    ".labflow/session.json": "{\n  \"active\": null,\n  \"history\": []\n}\n",
+    ".labflow/tasks.json": "{\n  \"items\": []\n}\n"
+  }
+}

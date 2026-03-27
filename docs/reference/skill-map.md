@@ -1,6 +1,7 @@
 # Skill Map
 
 ## Maintained skills
+
 - `phase-plan`
 - `phase-work`
 - `phase-verify`

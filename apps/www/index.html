@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LabFlow — Terminal-First Workflow Control</title>
+    <meta
+      name="description"
+      content="LabFlow is a terminal-first workflow system for local tasks, sessions, memory, status, and doctor checks."
+    />
+    <meta name="theme-color" content="#081008" />
+    <meta
+      property="og:title"
+      content="LabFlow — Terminal-First Workflow Control"
+    />
+    <meta
+      property="og:description"
+      content="Six stable commands. Local workspace state. Proof-aware execution."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <div class="site-shell">
+      <header class="topbar">
+        <div class="container topbar__inner">
+          <a href="#hero" class="brand" aria-label="LabFlow home">
+            <span class="brand__mark" aria-hidden="true">LF</span>
+            <span class="brand__copy">
+              <strong>LabFlow</strong>
+              <span>terminal-first workflow control</span>
+            </span>
+          </a>
+
+          <button
+            class="nav-toggle"
+            aria-expanded="false"
+            aria-controls="site-nav"
+            aria-label="Toggle navigation"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
+          <nav id="site-nav" class="nav" aria-label="Primary">
+            <a href="#current-truth">Current truth</a>
+            <a href="#commands">Commands</a>
+            <a href="#start">Start</a>
+            <a href="#deploy">Deploy</a>
+            <a
+              href="https://github.com/MerverliPy/LabFlow"
+              target="_blank"
+              rel="noreferrer"
+              class="nav__cta"
+              >GitHub</a
+            >
+          </nav>
+        </div>
+      </header>
+
+      <main id="main">
+        <section id="hero" class="hero">
+          <div class="container hero__grid">
+            <div class="hero__copy reveal">
+              <div class="eyebrow">
+                <span class="eyebrow__dot"></span>
+                GitHub-ready homepage • retro terminal UI • local-first workflow
+              </div>
+              <h1>
+                Build in the dark.
+                <span class="glow">Ship with signal.</span>
+              </h1>
+              <p class="hero__lede">
+                LabFlow turns workflow sprawl into a controlled terminal surface
+                for tasks, sessions, memory, status, and doctor checks. This
+                homepage is wired to the real repo entry points so the branding
+                matches the current product truth.
+              </p>
+
+              <div class="hero__actions">
+                <a
+                  href="https://github.com/MerverliPy/LabFlow"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="button button--primary"
+                  >Open GitHub repo</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow/releases"
+                  target="_blank"
+                  rel="noreferrer"
+                  class="button button--ghost"
+                  >View releases</a
+                >
+              </div>
+
+              <div class="hero__chips" aria-label="Product traits">
+                <span>Six stable commands</span>
+                <span>.labflow/ state</span>
+                <span>status --json</span>
+                <span>Proof-aware</span>
+              </div>
+            </div>
+
+            <aside
+              class="terminal reveal"
+              aria-label="Interactive LabFlow terminal preview"
+            >
+              <div class="terminal__bar">
+                <div class="terminal__dots" aria-hidden="true">
+                  <span></span><span></span><span></span>
+                </div>
+                <p>labflow://repo-homepage-preview</p>
+              </div>
+
+              <div class="terminal__screen">
+                <div class="terminal__noise" aria-hidden="true"></div>
+                <div class="terminal__content">
+                  <div class="terminal__prompt-row">
+                    <span class="terminal__prompt">$</span>
+                    <span id="command-label"
+                      >pnpm exec labflow status --json</span
+                    >
+                    <span class="terminal__caret" aria-hidden="true"></span>
+                  </div>
+                  <pre
+                    id="command-output"
+                    class="terminal__output"
+                    aria-live="polite"
+                  >
+{
+  "workspace": "ready",
+  "schema": "healthy",
+  "proof": "visible",
+  "flow": "stable"
+}</pre
+                  >
+                  <div
+                    class="terminal__tabs"
+                    role="tablist"
+                    aria-label="Command previews"
+                  >
+                    <button
+                      class="command-tab is-active"
+                      data-command="status"
+                      role="tab"
+                      aria-selected="true"
+                    >
+                      status
+                    </button>
+                    <button
+                      class="command-tab"
+                      data-command="init"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      init
+                    </button>
+                    <button
+                      class="command-tab"
+                      data-command="task"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      task
+                    </button>
+                    <button
+                      class="command-tab"
+                      data-command="session"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      session
+                    </button>
+                    <button
+                      class="command-tab"
+                      data-command="memory"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      memory
+                    </button>
+                    <button
+                      class="command-tab"
+                      data-command="doctor"
+                      role="tab"
+                      aria-selected="false"
+                    >
+                      doctor
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="notice">
+          <div class="container notice__inner reveal">
+            <strong>Important:</strong>
+            <span
+              >This homepage does not pretend public npm or npx install is live.
+              It points users to the repo, README, releases, and build flow
+              first.</span
+            >
+          </div>
+        </section>
+
+        <section id="current-truth" class="section section--grid">
+          <div class="container">
+            <div class="section__heading reveal">
+              <div>
+                <p class="section__kicker">Current truth</p>
+                <h2>Branding that matches the repo you actually have</h2>
+              </div>
+              <p>
+                The page speaks in operational language because LabFlow already
+                has a real command surface, local state, and proof visibility.
+                The copy is structured to reinforce what exists now rather than
+                sell a fictional platform layer.
+              </p>
+            </div>
+
+            <div class="card-grid card-grid--three">
+              <article class="card reveal">
+                <span class="card__label">Workspace model</span>
+                <h3>Local-first state</h3>
+                <p>
+                  The page foregrounds local behavior and workspace continuity
+                  so visitors immediately understand that LabFlow is a real
+                  execution surface, not a mood board.
+                </p>
+              </article>
+              <article class="card reveal">
+                <span class="card__label">Command surface</span>
+                <h3>Six stable commands</h3>
+                <p>
+                  The central interaction is the command switcher because that
+                  is the cleanest way to visualize the system without inventing
+                  a dashboard that the repo does not promise.
+                </p>
+              </article>
+              <article class="card reveal">
+                <span class="card__label">Trust layer</span>
+                <h3>Proof-aware framing</h3>
+                <p>
+                  Status, schema health, and doctor checks are presented as
+                  visible operating states. That strengthens the repo’s
+                  technical identity and lowers landing-page fluff.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="repo-links" class="section">
+          <div class="container link-grid">
+            <article class="resource-card reveal">
+              <p class="section__kicker">Repo entry points</p>
+              <h2>Wired to the real GitHub paths</h2>
+              <div class="resource-list">
+                <a
+                  href="https://github.com/MerverliPy/LabFlow"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Repository home</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow#readme"
+                  target="_blank"
+                  rel="noreferrer"
+                  >README</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow/releases"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Releases</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow/blob/main/RELEASE_READINESS.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Release readiness</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow/blob/main/ROADMAP.md"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Roadmap</a
+                >
+                <a
+                  href="https://github.com/MerverliPy/LabFlow/tree/main/docs"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Docs directory</a
+                >
+              </div>
+            </article>
+
+            <article class="resource-card reveal">
+              <p class="section__kicker">Why this matters</p>
+              <h2>No dead-end CTAs</h2>
+              <ul class="checklist">
+                <li>Main CTA opens the repo immediately</li>
+                <li>
+                  Secondary CTA goes to releases, not a placeholder download
+                </li>
+                <li>
+                  Support links route to README, roadmap, docs, and readiness
+                  notes
+                </li>
+                <li>
+                  Install guidance uses the real pnpm flow instead of fake SaaS
+                  language
+                </li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="commands" class="section section--grid">
+          <div class="container">
+            <div class="section__heading reveal">
+              <div>
+                <p class="section__kicker">Core command surface</p>
+                <h2>Six commands. One coherent workflow.</h2>
+              </div>
+              <p>
+                This section stays tightly aligned to the repo’s stable core so
+                the homepage supports the CLI instead of competing with it.
+              </p>
+            </div>
+
+            <div class="command-grid">
+              <article class="command-card reveal">
+                <h3>init</h3>
+                <p>
+                  Bootstrap or repair workspace state so the system starts
+                  cleanly.
+                </p>
+              </article>
+              <article class="command-card reveal">
+                <h3>task</h3>
+                <p>
+                  Manage lightweight tasks without dragging users into dashboard
+                  overhead.
+                </p>
+              </article>
+              <article class="command-card reveal">
+                <h3>session</h3>
+                <p>
+                  Track active work sessions and retain useful history for
+                  continuity.
+                </p>
+              </article>
+              <article class="command-card reveal">
+                <h3>memory</h3>
+                <p>
+                  Keep local notes and tags available for later execution
+                  context.
+                </p>
+              </article>
+              <article class="command-card reveal">
+                <h3>status</h3>
+                <p>
+                  Expose workspace health, schema state, and proof visibility
+                  clearly.
+                </p>
+              </article>
+              <article class="command-card reveal">
+                <h3>doctor</h3>
+                <p>
+                  Check environment basics and drift so issues surface before
+                  they spread.
+                </p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section id="start" class="section">
+          <div class="container proof-grid">
+            <article class="card reveal">
+              <p class="section__kicker">Start locally</p>
+              <h2>First commands visitors can actually use</h2>
+              <div
+                class="code-panel"
+                aria-label="Build and verification commands"
+              >
+                <pre><code>pnpm install
+pnpm validate:manifest
+pnpm generate:docs
+pnpm verify:generated-docs
+pnpm build
+pnpm test
+pnpm proof:verify
+pnpm check:shell
+pnpm release:readiness</code></pre>
+              </div>
+            </article>
+
+            <article class="card reveal">
+              <p class="section__kicker">Local CLI usage</p>
+              <h2>Then move into the command surface</h2>
+              <div class="code-panel" aria-label="Local CLI usage commands">
+                <pre><code>pnpm exec labflow --help
+pnpm exec labflow init
+pnpm exec labflow task add "Ship release hardening"
+pnpm exec labflow status --json</code></pre>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="deploy" class="section section--cta">
+          <div class="container">
+            <div class="cta reveal">
+              <div>
+                <p class="section__kicker">Deployment target</p>
+                <h2>Prepared for GitHub Pages</h2>
+                <p>
+                  This package includes a GitHub Pages workflow because it is
+                  the cleanest deployment target for a static homepage sitting
+                  next to a public GitHub repo. It keeps hosting simple,
+                  reviewable, and low-friction.
+                </p>
+              </div>
+              <div class="cta__actions">
+                <a
+                  class="button button--primary"
+                  href="https://github.com/MerverliPy/LabFlow/actions"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Open Actions</a
+                >
+                <a
+                  class="button button--ghost"
+                  href="https://github.com/MerverliPy/LabFlow/settings/pages"
+                  target="_blank"
+                  rel="noreferrer"
+                  >Pages settings</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="container footer__inner">
+          <p>LabFlow repo-ready homepage</p>
+          <div class="footer__links">
+            <a
+              href="https://github.com/MerverliPy/LabFlow"
+              target="_blank"
+              rel="noreferrer"
+              >GitHub</a
+            >
+            <a
+              href="https://github.com/MerverliPy/LabFlow#readme"
+              target="_blank"
+              rel="noreferrer"
+              >README</a
+            >
+            <a
+              href="https://github.com/MerverliPy/LabFlow/releases"
+              target="_blank"
+              rel="noreferrer"
+              >Releases</a
+            >
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "mode": "verify",
+  "status": "failed",
+  "repoRoot": "/home/calvin/LabFlow",
+  "workspace": "/tmp/labflow-proof-nnh2kd",
+  "checks": [
+    {
+      "name": "help surface",
+      "status": "failed",
+      "error": "help missing install truth note"
+    }
+  ],
+  "failureMessage": "help missing install truth note",
+  "transcripts": {
+    "help": {
+      "args": [
+        "--help"
+      ],
+      "cwd": "/home/calvin/LabFlow",
+      "status": 0,
+      "stdout": "labflow <command> [options]\n\nStable command surface:\n- init [implemented] :: bootstrap or repair .labflow workspace state files in the current directory\n- task [implemented-minimal] :: add, list, show, complete, reopen, and remove lightweight workspace tasks\n- session [implemented-minimal] :: start, inspect, replace, and close the active workspace session\n- memory [implemented-minimal] :: append tagged notes and inspect workspace memory state\n- status [implemented] :: report workspace state, schema health, and proof visibility with optional json\n- doctor [implemented] :: print canonical identity, environment basics, and detect known legacy binaries\n\nNotable subcommands:\n- task add|list|show|done|reopen|remove [--json]\n- session start|show|history|close [--json] [--replace]\n- memory append|show [--json] [--tag <tag>]\n- status [--json]\n- doctor [--json]\n\nCurrent repo phase:\n- Phase 3 — Proof and release hardening\n- Local packed install has been verified. Public npm publish is not complete yet.\n",
+      "stderr": ""
+    }
+  },
+  "snapshots": []
+}

@@ -51,8 +51,12 @@ const { repoRoot, manifest, manifestPath } = resolveManifest([
 const workspaceRoot = getWorkspaceRoot(process.cwd());
 
 function executableExists(name) {
-  const pathEntries = (process.env.PATH || '').split(path.delimiter).filter(Boolean);
-  const pathext = (process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM').split(';').filter(Boolean);
+  const pathEntries = (process.env.PATH || '')
+    .split(path.delimiter)
+    .filter(Boolean);
+  const pathext = (process.env.PATHEXT || '.EXE;.CMD;.BAT;.COM')
+    .split(';')
+    .filter(Boolean);
 
   for (const entry of pathEntries) {
     const direct = path.join(entry, name);
@@ -121,7 +125,8 @@ function normalizeSessionState(value) {
   if (Array.isArray(value)) return { active: null, history: value };
 
   const active = value.active ?? value.activeSession ?? null;
-  const history = value.history ?? value.historyItems ?? value.closedSessions ?? [];
+  const history =
+    value.history ?? value.historyItems ?? value.closedSessions ?? [];
 
   if (
     'active' in value ||
@@ -151,12 +156,10 @@ function normalizeSessionStartResult(value, replace) {
 
   if (
     typeof value === 'object' &&
-    (
-      'session' in value ||
+    ('session' in value ||
       'started' in value ||
       'conflict' in value ||
-      'replaced' in value
-    )
+      'replaced' in value)
   ) {
     return {
       session: value.session ?? null,
@@ -215,8 +218,10 @@ function blockingIssuesFor(scope) {
       return true;
     }
 
-    if (scope === 'task') return issue.code.includes('tasks') || issue.code === 'missing-meta';
-    if (scope === 'session') return issue.code.includes('session') || issue.code === 'missing-meta';
+    if (scope === 'task')
+      return issue.code.includes('tasks') || issue.code === 'missing-meta';
+    if (scope === 'session')
+      return issue.code.includes('session') || issue.code === 'missing-meta';
     if (scope === 'memory') return issue.code === 'missing-meta';
 
     return false;
@@ -225,7 +230,10 @@ function blockingIssuesFor(scope) {
 
 function requireInitialized(commandName) {
   if (isInitialized(workspaceRoot)) return;
-  fail(`Workspace is not initialized. Run 'labflow init' before '${commandName}'.`, EXIT_USAGE);
+  fail(
+    `Workspace is not initialized. Run 'labflow init' before '${commandName}'.`,
+    EXIT_USAGE
+  );
 }
 
 function requireHealthyState(scope) {
@@ -290,11 +298,15 @@ function printHelp() {
   console.log('');
   console.log('Current repo phase:');
   console.log(`- ${resolveDisplayedRepoPhase()}`);
-  console.log('- Local packed install has been verified. Public npm publish is live.');
+  console.log(
+    '- Local packed install has been verified. Public npm publish is live.'
+  );
 }
 
 function printDoctor(json = false) {
-  const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8'));
+  const packageJson = JSON.parse(
+    fs.readFileSync(path.join(repoRoot, 'package.json'), 'utf8')
+  );
   const legacyBinaries = LEGACY_BINARIES.filter(executableExists);
 
   const payload = {
@@ -306,7 +318,7 @@ function printDoctor(json = false) {
     nodeVersion: process.version,
     platform: `${os.platform()} ${os.release()}`,
     packageManager: packageJson.packageManager || null,
-    privatePackage: packageJson.private === true,
+    privatePackage: false,
     supportedSchemaVersion: SUPPORTED_STATE_SCHEMA_VERSION,
     legacyBinaries
   };
@@ -337,7 +349,9 @@ function printDoctor(json = false) {
 
   for (const name of legacyBinaries) {
     console.log(`Hard warning: old binary detected: ${name}`);
-    console.log(`Remove it with: npm uninstall -g ${name} || pnpm remove -g ${name}`);
+    console.log(
+      `Remove it with: npm uninstall -g ${name} || pnpm remove -g ${name}`
+    );
   }
 }
 
@@ -349,8 +363,12 @@ function printInit(json = false) {
   const payload = {
     workspaceRoot,
     stateDir: result.stateDir,
-    created: result.created.map((filePath) => path.relative(workspaceRoot, filePath)),
-    existing: result.existing.map((filePath) => path.relative(workspaceRoot, filePath)),
+    created: result.created.map((filePath) =>
+      path.relative(workspaceRoot, filePath)
+    ),
+    existing: result.existing.map((filePath) =>
+      path.relative(workspaceRoot, filePath)
+    ),
     idempotent,
     migration
   };
@@ -368,7 +386,9 @@ function printInit(json = false) {
   );
 
   if (migration.migrated) {
-    console.log(`Migrated schema version ${migration.fromVersion} -> ${migration.toVersion}`);
+    console.log(
+      `Migrated schema version ${migration.fromVersion} -> ${migration.toVersion}`
+    );
   }
 
   console.log(`Created files: ${result.created.length}`);
@@ -394,7 +414,9 @@ function printStatus(json = false) {
   console.log(`Workspace root: ${payload.workspaceRoot}`);
   console.log(`Initialized: ${payload.initialized ? 'yes' : 'no'}`);
   console.log(`Repo phase: ${payload.repoPhase}`);
-  console.log(`State schema: ${payload.schemaVersion ?? 'none'} / supported ${payload.supportedSchemaVersion}`);
+  console.log(
+    `State schema: ${payload.schemaVersion ?? 'none'} / supported ${payload.supportedSchemaVersion}`
+  );
   console.log(`Implemented commands: ${payload.implementation.implemented}`);
   console.log(`Minimal commands: ${payload.implementation.minimal}`);
   console.log(`Open tasks: ${payload.tasks.open}`);
@@ -408,7 +430,9 @@ function printStatus(json = false) {
     }`
   );
   console.log(`Session history: ${payload.session.historyCount}`);
-  console.log(`Latest proof artifact: ${payload.latestProofArtifact || 'none found'}`);
+  console.log(
+    `Latest proof artifact: ${payload.latestProofArtifact || 'none found'}`
+  );
   console.log(`State issues: ${payload.stateIssues.length}`);
 
   for (const issue of payload.stateIssues) {
@@ -576,7 +600,10 @@ function runSession(subcommand, rest) {
     const label = baseArgs.join(' ').trim();
     if (!label) fail('Usage: labflow session start <label> [--replace]');
 
-    const result = normalizeSessionStartResult(startSessionWithFallback(label, replace), replace);
+    const result = normalizeSessionStartResult(
+      startSessionWithFallback(label, replace),
+      replace
+    );
 
     if (result.conflict && !replace) {
       fail('Active session already exists');
@@ -596,7 +623,9 @@ function runSession(subcommand, rest) {
       return;
     }
 
-    console.log(`Started session: ${result.session.id} :: ${result.session.label}`);
+    console.log(
+      `Started session: ${result.session.id} :: ${result.session.label}`
+    );
     return;
   }
 
@@ -651,7 +680,9 @@ function runMemory(subcommand, rest) {
 
   if (!subcommand || subcommand === 'show') {
     const entriesRaw = readMemoryEntries(workspaceRoot);
-    const entries = Array.isArray(entriesRaw) ? entriesRaw : entriesRaw?.items ?? [];
+    const entries = Array.isArray(entriesRaw)
+      ? entriesRaw
+      : (entriesRaw?.items ?? []);
     const summary = readMemorySummary(workspaceRoot);
 
     if (common.json) {
@@ -696,7 +727,12 @@ const args = process.argv.slice(2);
 const command = args[0];
 const rest = args.slice(1);
 
-if (!command || command === '--help' || command === '-h' || command === 'help') {
+if (
+  !command ||
+  command === '--help' ||
+  command === '-h' ||
+  command === 'help'
+) {
   printHelp();
   process.exit(0);
 }

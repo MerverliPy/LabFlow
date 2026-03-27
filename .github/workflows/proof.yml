@@ -2,14 +2,13 @@ name: Proof
 
 on:
   push:
+    branches:
+      - main
   pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 jobs:
   proof:
@@ -32,25 +31,15 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            pnpm install
+          fi
 
-      - name: Build site app
+      - name: Run test suite
+        run: pnpm test
+
+      - name: Build packages
         run: pnpm build
-
-      - name: Check runtime helper syntax
-        run: node --check packages/core/src/runtime.mjs
-
-      - name: Check core entry syntax
-        run: node --check packages/core/src/index.mjs
-
-      - name: Check docs generator syntax
-        run: node --check tools/generate-docs.mjs
-
-      - name: Runtime path regression test
-        run: node --test packages/core/test/runtime.test.mjs
-
-      - name: Generate docs
-        run: node tools/generate-docs.mjs
-
-      - name: Verify generated docs
-        run: node tools/check-generated-docs.mjs

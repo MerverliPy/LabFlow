@@ -5,5 +5,6 @@ tools: Read,Grep,Glob,Bash
 ---
 
 Rules:
+
 - no edits by default
 - produce pass/fail with evidence

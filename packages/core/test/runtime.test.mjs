@@ -6,7 +6,13 @@ import { pathToFileURL } from 'node:url';
 import { isMainModule } from '../src/runtime.mjs';
 
 test('isMainModule matches platform-native absolute script paths', () => {
-  const scriptPath = path.resolve(process.cwd(), '..', '..', 'tools', 'generate-docs.mjs');
+  const scriptPath = path.resolve(
+    process.cwd(),
+    '..',
+    '..',
+    'tools',
+    'generate-docs.mjs'
+  );
   const importMetaUrl = pathToFileURL(scriptPath).href;
 
   assert.equal(isMainModule(importMetaUrl, scriptPath), true);
@@ -52,7 +58,10 @@ test('isMainModule returns false for different files', () => {
 
 test('isMainModule returns false when argv1 is missing', () => {
   assert.equal(
-    isMainModule('file:///home/calvin/LabFlow/tools/generate-docs.mjs', undefined),
+    isMainModule(
+      'file:///home/calvin/LabFlow/tools/generate-docs.mjs',
+      undefined
+    ),
     false
   );
 });

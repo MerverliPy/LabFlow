@@ -1,0 +1,26 @@
+{
+  "mode": "verify",
+  "status": "failed",
+  "repoRoot": "/home/calvin/LabFlow",
+  "workspace": "/tmp/labflow-proof-BZacPQ",
+  "checks": [
+    {
+      "name": "help surface",
+      "status": "failed",
+      "error": "help missing stable command: init"
+    }
+  ],
+  "failureMessage": "help missing stable command: init",
+  "transcripts": {
+    "help": {
+      "args": [
+        "--help"
+      ],
+      "cwd": "/home/calvin/LabFlow",
+      "status": 0,
+      "stdout": "labflow <command>\n\nStable commands:\n- init\n- task\n- session\n- memory\n- status\n- doctor\n",
+      "stderr": ""
+    }
+  },
+  "snapshots": []
+}

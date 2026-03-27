@@ -1,0 +1,97 @@
+{
+  "mode": "verify",
+  "status": "passed",
+  "repoRoot": "/mnt/data/labflow_repo/labflow-github-implementation-pack",
+  "generatedAt": "2026-03-25T18:53:55.095Z",
+  "checks": [
+    {
+      "name": "help surface",
+      "status": "passed"
+    },
+    {
+      "name": "doctor identity",
+      "status": "passed"
+    },
+    {
+      "name": "unknown command rejection",
+      "status": "passed"
+    },
+    {
+      "name": "phase-1 scaffold gate",
+      "status": "passed",
+      "commands": [
+        "init",
+        "task",
+        "session",
+        "memory",
+        "status"
+      ]
+    }
+  ],
+  "transcripts": {
+    "help": {
+      "args": [
+        "--help"
+      ],
+      "status": 0,
+      "stdout": "labflow <command>\n\nStable command surface:\n- init\n- task\n- session\n- memory\n- status\n- doctor\n\nPhase status:\n- doctor is implemented\n- other stable commands are admitted but intentionally scaffolded\n",
+      "stderr": ""
+    },
+    "doctor": {
+      "args": [
+        "doctor"
+      ],
+      "status": 0,
+      "stdout": "LabFlow doctor\nExpected product name: LabFlow\nExpected package name: labflow\nExpected CLI name: labflow\nNo known legacy binaries detected in PATH.\n",
+      "stderr": ""
+    },
+    "unknown": {
+      "args": [
+        "swarm"
+      ],
+      "status": 1,
+      "stdout": "",
+      "stderr": "Unknown or non-stable command: swarm\n"
+    },
+    "init": {
+      "args": [
+        "init"
+      ],
+      "status": 2,
+      "stdout": "",
+      "stderr": "Scaffold only: 'init' is part of the stable command surface, but its behavior is intentionally deferred to Phase 2.\n"
+    },
+    "task": {
+      "args": [
+        "task"
+      ],
+      "status": 2,
+      "stdout": "",
+      "stderr": "Scaffold only: 'task' is part of the stable command surface, but its behavior is intentionally deferred to Phase 2.\n"
+    },
+    "session": {
+      "args": [
+        "session"
+      ],
+      "status": 2,
+      "stdout": "",
+      "stderr": "Scaffold only: 'session' is part of the stable command surface, but its behavior is intentionally deferred to Phase 2.\n"
+    },
+    "memory": {
+      "args": [
+        "memory"
+      ],
+      "status": 2,
+      "stdout": "",
+      "stderr": "Scaffold only: 'memory' is part of the stable command surface, but its behavior is intentionally deferred to Phase 2.\n"
+    },
+    "status": {
+      "args": [
+        "status"
+      ],
+      "status": 2,
+      "stdout": "",
+      "stderr": "Scaffold only: 'status' is part of the stable command surface, but its behavior is intentionally deferred to Phase 2.\n"
+    }
+  }
+}

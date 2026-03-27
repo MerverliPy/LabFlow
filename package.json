@@ -1,14 +1,20 @@
 {
-  "name": "labflow-repo-homepage",
+  "name": "labflow-monorepo",
   "private": true,
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "pnpm -r --if-present run build",
+    "build:www": "pnpm --dir apps/www run build",
+    "dev:www": "pnpm --dir apps/www run dev",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "pnpm -r --if-present run test",
+    "verify": "pnpm format:check && pnpm lint && pnpm test && pnpm build",
+    "proof:verify": "pnpm --dir packages/proof-sdk run verify"
   },
   "devDependencies": {
-    "vite": "^7.1.0"
+    "prettier": "^3.4.2"
   }
 }

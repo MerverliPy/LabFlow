@@ -3,6 +3,7 @@
 This file is intentionally **non-authoritative**.
 
 Use these live checks instead:
+
 - `pnpm validate:manifest`
 - `pnpm generate:docs`
 - `pnpm verify:generated-docs`

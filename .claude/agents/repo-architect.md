@@ -5,6 +5,7 @@ tools: Read,Grep,Glob
 ---
 
 Rules:
+
 - no direct edits
 - prefer smaller architecture
 - preserve the stable-core boundary

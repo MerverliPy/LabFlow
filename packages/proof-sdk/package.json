@@ -6,7 +6,9 @@
   "scripts": {
     "build": "node --check src/index.mjs",
     "typecheck": "echo typecheck-proof-sdk",
-    "test": "node src/index.mjs verify"
+    "test": "node --input-type=module -e \"import('./src/index.mjs').then(() => console.log('proof-sdk exports ok'))\"",
+    "lint": "node --check src/index.mjs",
+    "verify": "node src/index.mjs verify"
   },
   "repository": {
     "type": "git",

@@ -3,6 +3,7 @@
 Source of truth: `config/stable-command-manifest.json`.
 
 ## Stable command surface
+
 - `init` [implemented] — bootstrap or repair .labflow workspace state files in the current directory
 - `task` [implemented-minimal] — add, list, show, complete, reopen, and remove lightweight workspace tasks
 - `session` [implemented-minimal] — start, inspect, replace, and close the active workspace session
@@ -11,6 +12,7 @@ Source of truth: `config/stable-command-manifest.json`.
 - `doctor` [implemented] — print canonical identity, environment basics, and detect known legacy binaries
 
 ## Current implementation status
+
 - All six stable commands now have at least minimal behavior.
 - `doctor` verifies canonical identity, environment basics, and legacy binary drift.
 - `init` bootstraps `.labflow/` state, is idempotent on re-run, and can migrate older schema metadata.

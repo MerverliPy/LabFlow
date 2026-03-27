@@ -1,0 +1,10 @@
+{
+  "label": "after-memory-notes",
+  "workspacePath": "/tmp/labflow-proof-dDuTtz",
+  "files": {
+    ".labflow/memory.md": "# LabFlow Memory\n\nWorkspace notes written by `labflow memory append`.\n- 2026-03-26T12:31:15.373Z [tag:release] :: Lock docs before publish\n- 2026-03-26T12:31:15.403Z :: Proof failures should be replayable\n",
+    ".labflow/meta.json": "{\n  \"schemaVersion\": 1,\n  \"productName\": \"LabFlow\",\n  \"cliName\": \"labflow\",\n  \"initializedAt\": \"2026-03-26T12:31:14.920Z\",\n  \"stableCommands\": [\n    \"init\",\n    \"task\",\n    \"session\",\n    \"memory\",\n    \"status\",\n    \"doctor\"\n  ],\n  \"migratedAt\": null\n}\n",
+    ".labflow/session.json": "{\n  \"active\": null,\n  \"history\": [\n    {\n      \"id\": \"session-20260326123115\",\n      \"label\": \"phase-3-hardening\",\n      \"startedAt\": \"2026-03-26T12:31:15.224Z\",\n      \"endedAt\": \"2026-03-26T12:31:15.284Z\",\n      \"endedReason\": \"replaced\"\n    },\n    {\n      \"id\": \"session-20260326123115\",\n      \"label\": \"phase-3-replaced\",\n      \"startedAt\": \"2026-03-26T12:31:15.284Z\",\n      \"endedAt\": \"2026-03-26T12:31:15.343Z\",\n      \"endedReason\": \"closed\"\n    }\n  ]\n}\n",
+    ".labflow/tasks.json": "{\n  \"items\": [\n    {\n      \"id\": \"task-001\",\n      \"title\": \"Ship release hardening\",\n      \"status\": \"open\",\n      \"createdAt\": \"2026-03-26T12:31:14.981Z\",\n      \"reopenedAt\": \"2026-03-26T12:31:15.133Z\"\n    }\n  ]\n}\n"
+  }
+}

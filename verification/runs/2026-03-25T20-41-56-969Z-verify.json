@@ -1,0 +1,176 @@
+{
+  "mode": "verify",
+  "status": "passed",
+  "repoRoot": "/mnt/data/next_opt_repo",
+  "workspace": "/tmp/labflow-proof-VSiRFY",
+  "generatedAt": "2026-03-25T20:41:56.968Z",
+  "checks": [
+    {
+      "name": "help surface",
+      "status": "passed"
+    },
+    {
+      "name": "doctor identity",
+      "status": "passed"
+    },
+    {
+      "name": "status before init",
+      "status": "passed"
+    },
+    {
+      "name": "workspace init",
+      "status": "passed"
+    },
+    {
+      "name": "task add",
+      "status": "passed"
+    },
+    {
+      "name": "task done",
+      "status": "passed"
+    },
+    {
+      "name": "session start",
+      "status": "passed"
+    },
+    {
+      "name": "memory append",
+      "status": "passed"
+    },
+    {
+      "name": "status after init",
+      "status": "passed"
+    },
+    {
+      "name": "session close",
+      "status": "passed"
+    },
+    {
+      "name": "memory show",
+      "status": "passed"
+    },
+    {
+      "name": "unknown command rejection",
+      "status": "passed"
+    }
+  ],
+  "transcripts": {
+    "help": {
+      "args": [
+        "--help"
+      ],
+      "cwd": "/mnt/data/next_opt_repo",
+      "status": 0,
+      "stdout": "labflow <command> [options]\n\nStable command surface:\n- init [implemented-minimal] :: bootstrap .labflow workspace state files in the current directory\n- task [implemented-minimal] :: add, list, and complete lightweight workspace tasks\n- session [implemented-minimal] :: start, inspect, and close the active workspace session\n- memory [implemented-minimal] :: append notes and inspect workspace memory state\n- status [implemented-minimal] :: report workspace state, command readiness, and proof visibility\n- doctor [implemented] :: print canonical identity and detect known legacy binaries\n\nCurrent repo phase:\n- Phase 2 — Minimal stable-core implementation\n- Public npm / npx install is intentionally disabled until publish readiness is proven.\n",
+      "stderr": ""
+    },
+    "doctor": {
+      "args": [
+        "doctor"
+      ],
+      "cwd": "/mnt/data/next_opt_repo",
+      "status": 0,
+      "stdout": "LabFlow doctor\nExpected product name: LabFlow\nExpected package name: labflow\nExpected CLI name: labflow\nWorkspace root: /mnt/data/next_opt_repo\nWorkspace state dir: /mnt/data/next_opt_repo/.labflow\nNo known legacy binaries detected in PATH.\n",
+      "stderr": ""
+    },
+    "statusBeforeInit": {
+      "args": [
+        "status"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "LabFlow status\nWorkspace root: /tmp/labflow-proof-VSiRFY\nInitialized: no\nRepo phase: Phase 2 — Minimal stable-core implementation\nImplemented commands: 1\nMinimal commands: 5\nOpen tasks: 0\nTotal tasks: 0\nMemory notes: 0\nActive session: none\nSession history: 0\nLatest proof artifact: 2026-03-25T18-53-55-096Z-verify.json\n",
+      "stderr": ""
+    },
+    "init": {
+      "args": [
+        "init"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Initialized workspace state at: /tmp/labflow-proof-VSiRFY/.labflow\nCreated files: 4\n- created :: .labflow/meta.json\n- created :: .labflow/tasks.json\n- created :: .labflow/session.json\n- created :: .labflow/memory.md\nExisting files: 0\n",
+      "stderr": ""
+    },
+    "taskAdd": {
+      "args": [
+        "task",
+        "add",
+        "Ship proof-backed starter"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Added task task-001: Ship proof-backed starter\n",
+      "stderr": ""
+    },
+    "taskDone": {
+      "args": [
+        "task",
+        "done",
+        "task-001"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Completed task task-001: Ship proof-backed starter\n",
+      "stderr": ""
+    },
+    "sessionStart": {
+      "args": [
+        "session",
+        "start",
+        "phase-2-proof"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Started session session-20260325204156 :: phase-2-proof\n",
+      "stderr": ""
+    },
+    "memoryAppend": {
+      "args": [
+        "memory",
+        "append",
+        "Captured verification-ready workspace state"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Appended memory note to /tmp/labflow-proof-VSiRFY/.labflow/memory.md\n",
+      "stderr": ""
+    },
+    "statusAfterInit": {
+      "args": [
+        "status"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "LabFlow status\nWorkspace root: /tmp/labflow-proof-VSiRFY\nInitialized: yes\nRepo phase: Phase 2 — Minimal stable-core implementation\nImplemented commands: 1\nMinimal commands: 5\nOpen tasks: 0\nTotal tasks: 1\nMemory notes: 1\nActive session: session-20260325204156 (phase-2-proof)\nSession history: 0\nLatest proof artifact: 2026-03-25T18-53-55-096Z-verify.json\n",
+      "stderr": ""
+    },
+    "sessionClose": {
+      "args": [
+        "session",
+        "close"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Closed session session-20260325204156 :: phase-2-proof\n",
+      "stderr": ""
+    },
+    "memoryShow": {
+      "args": [
+        "memory"
+      ],
+      "cwd": "/tmp/labflow-proof-VSiRFY",
+      "status": 0,
+      "stdout": "Memory file: /tmp/labflow-proof-VSiRFY/.labflow/memory.md\nLines: 3\nNotes: 1\nLatest note: - 2026-03-25T20:41:56.493Z :: Captured verification-ready workspace state\n",
+      "stderr": ""
+    },
+    "unknown": {
+      "args": [
+        "swarm"
+      ],
+      "cwd": "/mnt/data/next_opt_repo",
+      "status": 1,
+      "stdout": "",
+      "stderr": "Unknown or non-stable command: swarm\n"
+    }
+  }
+}

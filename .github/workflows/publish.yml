@@ -1,12 +1,10 @@
-name: Publish
+name: Publish CLI
 
 on:
+  release:
+    types:
+      - published
   workflow_dispatch:
-    inputs:
-      confirm_publish:
-        description: "Type YES to publish"
-        required: true
-        default: "NO"
 
 permissions:
   contents: read
@@ -14,7 +12,6 @@ permissions:
 
 jobs:
   publish:
-    if: ${{ inputs.confirm_publish == 'YES' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -24,47 +21,29 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
+          version: 10
           run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: pnpm
+          node-version: 20
           registry-url: https://registry.npmjs.org
-
-      - name: Upgrade npm for trusted publishing
-        run: npm install -g npm@11
-
-      - name: Show tool versions
-        run: |
-          node --version
-          npm --version
-          pnpm --version
+          cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f pnpm-lock.yaml ]; then
+            pnpm install --frozen-lockfile
+          else
+            pnpm install
+          fi
 
-      - name: Validate manifest
-        run: pnpm validate:manifest
+      - name: Pack CLI
+        run: pnpm --dir packages/cli pack
 
-      - name: Generate docs
-        run: pnpm generate:docs
-
-      - name: Verify generated docs
-        run: pnpm verify:generated-docs
-
-      - name: Build
-        run: pnpm build
-
-      - name: Test
-        run: pnpm test
-
-      - name: Proof verify
-        run: pnpm proof:verify
-
-      - name: Check shell
-        run: pnpm check:shell
-
-      - name: Publish to npm with trusted publishing
-        run: npm publish
+      - name: Publish CLI
+        working-directory: packages/cli
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,54 +1,79 @@
-# LabFlow GitHub Implementation Pack
+# LabFlow
 
-GitHub-ready starter repo for **LabFlow** optimized for **Claude Code terminal**.
+![CI](https://github.com/MerverliPy/LabFlow/actions/workflows/ci.yml/badge.svg)
+![Proof](https://github.com/MerverliPy/LabFlow/actions/workflows/proof.yml/badge.svg)
+![Publish CLI](https://github.com/MerverliPy/LabFlow/actions/workflows/publish.yml/badge.svg)
 
-## Locked decisions
-- Product / package / CLI / repo identity: **LabFlow / labflow / labflow**
-- Stable core only: `init`, `task`, `session`, `memory`, `status`, `doctor`
-- Skills-first Claude Code surface
-- Thin root `CLAUDE.md`
-- Proof harness is a behavioral gate
-- Three hardened subagents only
-- Zero required plugins or MCP servers in the default path
+LabFlow is a terminal-first workspace CLI for managing local project state, tasks, sessions, and memory from a repository-scoped .labflow directory.
 
-## Current truth
-- all 6 stable commands have real local behavior
-- workspace state is stored in `.labflow/`
-- `status --json` reports schema health and proof visibility
-- public npm / `npx` install is **not** supported yet
-- repo, homepage, and issues metadata are now configured
-- release blockers are tracked in `RELEASE_READINESS.md`
+## Status
 
-## What works now
-- `labflow init` bootstraps or repairs workspace state files
-- `labflow status [--json]` reports workspace state, schema version, and latest proof artifact
-- `labflow task add|list|show|done|reopen|remove` manages lightweight tasks
-- `labflow session start|show|history|close` manages the active session and closed-session history
-- `labflow memory append|show` manages local memory notes with optional tags
-- `labflow doctor [--json]` prints canonical identity, environment basics, and legacy-binary drift
+LabFlow is in an early hardening phase.
 
-## Before publish
-- generate `pnpm-lock.yaml` in a networked environment
-- decide package visibility and release process
-- verify installed execution after publish prep is complete
+Current repo rules:
 
-## First commands
-```bash
-pnpm install
-pnpm validate:manifest
-pnpm generate:docs
-pnpm verify:generated-docs
-pnpm build
-pnpm test
-pnpm proof:verify
-pnpm check:shell
-pnpm release:readiness
-```
+- the repository root is the workspace orchestrator
+- the website lives under apps/www
+- the npm publish target is packages/cli
+- generated package archives should not be committed
 
-## Local CLI usage
-```bash
-pnpm exec labflow --help
-pnpm exec labflow init
-pnpm exec labflow task add "Ship release hardening"
-pnpm exec labflow status --json
-```
+## Quick start
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm
+- Git
+
+### Install
+
+    pnpm install
+
+### Verify
+
+    pnpm verify
+
+### Run the CLI locally
+
+    pnpm exec labflow --help
+    pnpm exec labflow init
+    pnpm exec labflow task add "Ship release hardening"
+    pnpm exec labflow status --json
+    pnpm exec labflow doctor --json
+
+## Repository layout
+
+    apps/www/          Website / landing page
+    packages/cli/      Publishable CLI package
+    packages/core/     Core shared logic
+    packages/memory/   Workspace memory/state logic
+    packages/proof-sdk/ Proof / verification package
+    docs/              Architecture and release docs
+    .github/           Workflows and templates
+    verification/      Verification artifacts
+
+## Development workflow
+
+    pnpm format
+    pnpm lint
+    pnpm test
+    pnpm build
+    pnpm verify
+
+## Publish target
+
+Only packages/cli should be published to npm.
+
+The repository root is not a publishable npm package.
+
+## Contributing
+
+See CONTRIBUTING.md.
+
+## Security
+
+See SECURITY.md.
+
+## License
+
+See LICENSE.

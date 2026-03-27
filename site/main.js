@@ -137,3 +137,68 @@ if ('IntersectionObserver' in window) {
     });
   });
 })();
+
+
+// LABFLOW MEASUREMENT PACK
+(function () {
+  function sendEvent(name, props) {
+    try {
+      if (window.zaraz && typeof window.zaraz.track === "function") {
+        window.zaraz.track(name, props || {});
+      }
+    } catch (err) {
+      // no-op
+    }
+  }
+
+  function getLocation(el) {
+    if (!el) return "unknown";
+    if (el.closest(".hero")) return "hero";
+    if (el.closest(".topbar") || el.closest("header") || el.closest(".nav")) return "header";
+    if (el.closest("#start")) return "start_section";
+    if (el.closest("#commands")) return "commands_section";
+    return "body";
+  }
+
+  document.addEventListener("click", function (event) {
+    const el = event.target.closest("a, button");
+    if (!el) return;
+
+    // Get started
+    if (el.matches('a[href="#start"], button[data-track="get-started"]')) {
+      sendEvent("get_started_click", {
+        location: getLocation(el),
+        text: (el.textContent || "").trim().slice(0, 80)
+      });
+      return;
+    }
+
+    // Open GitHub repo
+    if (el.matches('a[href="https://github.com/MerverliPy/LabFlow"], a[href^="https://github.com/MerverliPy/LabFlow?"]')) {
+      sendEvent("open_github_repo_click", {
+        location: getLocation(el),
+        text: (el.textContent || "").trim().slice(0, 80)
+      });
+      return;
+    }
+
+    // View releases
+    if (el.matches('a[href="https://github.com/MerverliPy/LabFlow/releases"], a[href^="https://github.com/MerverliPy/LabFlow/releases?"]')) {
+      sendEvent("view_releases_click", {
+        location: getLocation(el),
+        text: (el.textContent || "").trim().slice(0, 80)
+      });
+      return;
+    }
+
+    // Copy command buttons
+    if (el.matches("[data-copy]")) {
+      const raw = el.getAttribute("data-copy") || "";
+      sendEvent("copy_command_click", {
+        location: getLocation(el),
+        command: raw.replace(/\s+/g, " ").trim().slice(0, 120),
+        text: (el.textContent || "").trim().slice(0, 80)
+      });
+    }
+  }, { passive: true });
+})();

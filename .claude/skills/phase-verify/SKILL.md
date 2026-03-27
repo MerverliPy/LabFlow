@@ -1,16 +1,16 @@
 ---
 name: phase-verify
-description: Verify the smallest changed scope first, then report pass fail evidence and unresolved risk.
+description: Verify the current phase with the smallest relevant checks first, then report pass or fail with concrete evidence.
+disable-model-invocation: true
+effort: low
 ---
 
-# Phase Verify
-
-1. Identify the narrowest relevant verification target.
-2. Run local package or file-scoped checks before broad repo-wide checks.
-3. Record:
-   - what was verified
-   - what passed
-   - what failed
+1. Prefer package-local or file-local checks before broader repo checks.
+2. Run the minimum command set needed to prove or falsify the change.
+3. Report:
+   - command run
+   - pass/fail
+   - failing file or boundary
+   - first actionable error
    - unresolved risk
-4. If a broader check is skipped, state why.
-5. Feed reusable verification lessons to the verifier agent memory, not to root docs.
+4. Do not expand into broad cleanup unless verification proves it is necessary.

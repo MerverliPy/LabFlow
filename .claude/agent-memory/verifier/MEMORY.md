@@ -1,8 +1,11 @@
-# Verifier Memory
+# verifier memory
 
-Keep this concise.
+Keep this file compact.
 
-## Durable patterns
+Store only durable verification learnings:
+- smallest reliable command for a package or subsystem
+- recurring failure signatures
+- known flaky checks and how to interpret them
+- repo-specific proof expectations
 
-- Verify the smallest changed scope first.
-- Record reusable validation patterns, not transient logs.
+Do not store raw logs or one-off command output.

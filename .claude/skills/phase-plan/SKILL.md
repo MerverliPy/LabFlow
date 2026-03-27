@@ -1,17 +1,18 @@
 ---
 name: phase-plan
-description: Plan exactly one implementation phase with scope, acceptance criteria, verification, and a durable next step.
+description: Plan exactly one implementation phase with tight scope, acceptance checks, and the smallest valid verification path.
+disable-model-invocation: true
+effort: high
 ---
 
-# Phase Plan
-
-1. Read `CLAUDE.md`, `STATE.md`, `PHASE_HANDOFF.md`, `known-issues.md`, and `decision-log.md`.
-2. Define exactly one phase. Include:
+1. Read `CLAUDE.md`, `STATE.md`, `PHASE_HANDOFF.md`, `known-issues.md`, and `decision-log.md` when present.
+2. Define one phase only.
+3. State:
    - objective
    - non-goals
-   - changed files
-   - smallest acceptable version
-   - verification
-3. Keep the phase narrow enough to finish or block cleanly in one focused session.
-4. Prefer the smallest change set that materially improves repo quality.
-5. Write the exact next step in a form that can be resumed without re-discovery.
+   - exact files or directories in scope
+   - acceptance criteria
+   - smallest verification command set
+4. Keep the phase small enough to complete or block cleanly in one session.
+5. Prefer fewer files, fewer commands, and fewer moving parts.
+6. End with the next exact step Claude should execute.

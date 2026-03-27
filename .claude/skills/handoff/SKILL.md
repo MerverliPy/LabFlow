@@ -1,20 +1,17 @@
 ---
 name: handoff
-description: Write a compact resume note with current objective, changed files, blockers, next exact step, and resume command.
+description: Write a compact resume note so the next session can continue without re-discovering context.
+disable-model-invocation: true
+effort: low
 ---
 
-# Handoff
-
-Update `PHASE_HANDOFF.md` so another Claude Code session can resume without rediscovery.
-
-Include only:
-
+Update `PHASE_HANDOFF.md` with:
 - objective
 - changed files
-- delivered behavior
+- verification run and result
 - blockers
 - next exact step
-- resume command
-- proof or verification status
+- one resume command
 
-Keep it concise and current. Do not preserve stale historical detail.
+Update `STATE.md` so it stays the current source of truth.
+Keep both files short and current.

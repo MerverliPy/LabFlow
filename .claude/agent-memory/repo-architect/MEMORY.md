@@ -1,8 +1,12 @@
-# Repo Architect Memory
+# repo-architect memory
 
-Keep this concise.
+Keep this file compact.
 
-## Durable patterns
+Store only durable repo facts:
+- stable directory boundaries
+- canonical workflow files
+- command contracts that repeatedly matter
+- recurring context-waste patterns
+- decisions that change how future work should be sliced
 
-- Favor thin root instructions and four default workflow skills.
-- Prefer active-truth files over repeated status prose.
+Do not store long transcripts, temporary plans, or obsolete status notes.

@@ -138,13 +138,12 @@ if ('IntersectionObserver' in window) {
   });
 })();
 
-
 // LABFLOW MEASUREMENT PACK
 (function () {
-  function sendEvent(name, props) {
+  async function sendEvent(name, props) {
     try {
       if (window.zaraz && typeof window.zaraz.track === "function") {
-        window.zaraz.track(name, props || {});
+        await window.zaraz.track(name, props || {});
       }
     } catch (err) {
       // no-op
@@ -160,45 +159,59 @@ if ('IntersectionObserver' in window) {
     return "body";
   }
 
-  document.addEventListener("click", function (event) {
+  document.addEventListener("click", async function (event) {
     const el = event.target.closest("a, button");
     if (!el) return;
 
-    // Get started
+    const text = (el.textContent || "").trim().slice(0, 80);
+
     if (el.matches('a[href="#start"], button[data-track="get-started"]')) {
-      sendEvent("get_started_click", {
+      await sendEvent("get_started_click", {
         location: getLocation(el),
-        text: (el.textContent || "").trim().slice(0, 80)
+        text
       });
       return;
     }
 
-    // Open GitHub repo
     if (el.matches('a[href="https://github.com/MerverliPy/LabFlow"], a[href^="https://github.com/MerverliPy/LabFlow?"]')) {
-      sendEvent("open_github_repo_click", {
+      event.preventDefault();
+      const href = el.getAttribute("href");
+      const target = el.getAttribute("target");
+      await sendEvent("open_github_repo_click", {
         location: getLocation(el),
-        text: (el.textContent || "").trim().slice(0, 80)
+        text
       });
+      if (target === "_blank") {
+        window.open(href, "_blank", "noopener,noreferrer");
+      } else if (href) {
+        window.location.href = href;
+      }
       return;
     }
 
-    // View releases
     if (el.matches('a[href="https://github.com/MerverliPy/LabFlow/releases"], a[href^="https://github.com/MerverliPy/LabFlow/releases?"]')) {
-      sendEvent("view_releases_click", {
+      event.preventDefault();
+      const href = el.getAttribute("href");
+      const target = el.getAttribute("target");
+      await sendEvent("view_releases_click", {
         location: getLocation(el),
-        text: (el.textContent || "").trim().slice(0, 80)
+        text
       });
+      if (target === "_blank") {
+        window.open(href, "_blank", "noopener,noreferrer");
+      } else if (href) {
+        window.location.href = href;
+      }
       return;
     }
 
-    // Copy command buttons
     if (el.matches("[data-copy]")) {
       const raw = el.getAttribute("data-copy") || "";
-      sendEvent("copy_command_click", {
+      await sendEvent("copy_command_click", {
         location: getLocation(el),
         command: raw.replace(/\s+/g, " ").trim().slice(0, 120),
-        text: (el.textContent || "").trim().slice(0, 80)
+        text
       });
     }
-  }, { passive: true });
+  });
 })();

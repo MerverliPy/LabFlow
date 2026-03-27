@@ -1,0 +1,23 @@
+{
+  "name": "labflow-tools",
+  "owner": {
+    "name": "MerverliPy"
+  },
+  "metadata": {
+    "description": "Reusable Claude Code plugins and workflow tooling for LabFlow repositories.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "labflow-claude-pack",
+      "description": "Lean Claude Code workflow plugin with phase skills, verification hook, core specialists, and an isolated refactor agent.",
+      "version": "1.0.0",
+      "source": {
+        "source": "git-subdir",
+        "url": "MerverliPy/LabFlow",
+        "path": "plugins/labflow-claude-pack",
+        "ref": "main"
+      }
+    }
+  ]
+}

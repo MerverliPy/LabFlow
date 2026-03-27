@@ -1,0 +1,18 @@
+{
+  "name": "labflow-claude-pack",
+  "description": "Lean Claude Code workflow plugin with phase skills, verification hook, core specialists, and an isolated refactor agent.",
+  "version": "1.0.0",
+  "author": {
+    "name": "MerverliPy",
+    "url": "https://github.com/MerverliPy"
+  },
+  "repository": "https://github.com/MerverliPy/LabFlow",
+  "license": "MIT",
+  "keywords": [
+    "claude-code",
+    "plugin",
+    "workflow",
+    "skills",
+    "agents"
+  ]
+}

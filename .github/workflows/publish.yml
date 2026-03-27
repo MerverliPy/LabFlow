@@ -39,14 +39,11 @@ jobs:
             pnpm install
           fi
 
-      - name: Verify repo
+      - name: Verify workspace
         run: pnpm verify
 
-      - name: Run proof harness
-        run: pnpm proof:verify
-
-      - name: Pack CLI
-        run: pnpm --dir packages/cli pack
+      - name: Packed-install smoke test
+        run: bash scripts/packed-install-smoke.sh
 
       - name: Publish CLI
         working-directory: packages/cli

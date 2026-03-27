@@ -11,6 +11,11 @@ and this project aims to follow [Semantic Versioning](https://semver.org/).
 - GitHub visitor-polish pass across README, trust files, templates, and workflows.
 
 ### Changed
+
+- GitHub visitor-polish pass across README, trust files, templates, and workflows.
+
+### Changed
+
 - Tightened repository-facing documentation and contribution guidance.
 - Strengthened issue and pull request intake structure.
 - Strengthened proof and publish workflow expectations.

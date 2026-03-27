@@ -2,46 +2,51 @@
 
 ## Objective
 
-Turn LabFlow into a Claude Code utility pack that improves token efficiency, workflow consistency, bounded memory, and reusable project bootstrapping without adding MCP, hook, or command bloat.
+Finish truth-surface cleanup without rewriting the repo architecture.
 
-## Changed files
+## Why this phase exists
 
-- CLAUDE.md
+The repo now has a valid monorepo control plane, but the active truth surface still leaks in two places:
+
+- extra legacy skills are still active on disk
+- root truth files do not fully reflect the current repo state
+
+## Files to touch
+
 - STATE.md
 - PHASE_HANDOFF.md
 - known-issues.md
 - decision-log.md
-- config/stable-command-manifest.json
-- tools/validate-manifest.mjs
-- docs/reference/skill-map.md
+- apps/www/AGENTS.md
+- archive/claude-skills-legacy/\*
 - .claude/skills/\*
-- .claude/agents/\*
-- .claude/agent-memory/\*
-- archive/\*
-- claude-code-pack/\*\*
 
-## Delivered behavior
+## Execution order
 
-- Current repo now uses a four-skill workflow surface instead of eight overlapping skills.
-- Current repo now has explicit active-truth files for issues and architecture decisions.
-- Current repo subagents are narrower and two of them support project-scoped memory.
-- A reusable Claude Code asset pack now exists under `claude-code-pack/` with global assets, a project template, install scripts, and an audit script.
-- Historical phase summaries moved out of the active root to reduce accidental context loading.
+1. Archive legacy skills:
+   - phase-close
+   - resume-latest
+   - review-worktree
+   - verify-worktree
 
-## Blockers
+2. Add `apps/www/AGENTS.md`.
 
-- The pack audit is structural and shell-based; it does not execute an interactive Claude Code session in this environment.
-- Global install still requires the user to run the provided scripts on a machine with Claude Code installed.
+3. Keep root truth concentrated in:
+   - `STATE.md`
+   - `PHASE_HANDOFF.md`
+   - `known-issues.md`
+   - `decision-log.md`
 
-## Next exact step
+4. Verify from repo root:
+   - `pnpm verify`
+   - `pnpm release:readiness`
 
-Run `./claude-code-pack/install/audit-pack.sh .` and then use `./claude-code-pack/install/bootstrap-project.sh <test-repo>` plus `./claude-code-pack/install/sync-global.sh` on a Claude Code workstation for a live smoke test.
+5. Run one real Claude Code smoke test using the pack install flow.
 
-## Resume command
+## Completion criteria
 
-`./claude-code-pack/install/audit-pack.sh .`
-
-## Proof status
-
-- structural integrity: pack and repo audit pass expected
-- behavioral proof: awaiting live Claude Code smoke test outside this sandbox
+- Only four default skills remain active in `.claude/skills/`.
+- `apps/www` has local guidance.
+- Root truth files agree on current state.
+- Root verification passes.
+- Runtime smoke test result is recorded.

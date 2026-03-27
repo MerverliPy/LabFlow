@@ -617,3 +617,71 @@ ul { line-height: 1.65; }
   }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* Final iPhone headline + hero polish */
+.hero-title {
+  display: grid;
+  gap: 0.08em;
+}
+
+.hero-title > span {
+  display: block;
+}
+
+@media (max-width: 760px) {
+  .eyebrow {
+    padding: 0.46rem 0.78rem;
+    font-size: 0.73rem;
+    line-height: 1.35;
+  }
+
+  .hero-title {
+    gap: 0.02em;
+  }
+
+  .hero h1,
+  .hero-title {
+    font-size: clamp(2.5rem, 11.5vw, 3.8rem);
+    line-height: 0.96;
+    max-width: 10.5ch;
+  }
+
+  .hero__lede {
+    font-size: 0.98rem;
+    line-height: 1.58;
+    max-width: 32ch;
+  }
+
+  .hero__actions {
+    gap: 0.65rem;
+    margin-top: 1.05rem;
+  }
+
+  .button {
+    min-height: 44px;
+    padding: 0.78rem 0.95rem;
+    font-size: 0.97rem;
+  }
+
+  .hero__chips {
+    gap: 0.55rem;
+    margin-top: 0.95rem;
+  }
+
+  .hero__chips span {
+    padding: 0.58rem 0.8rem;
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero h1,
+  .hero-title {
+    font-size: clamp(2.35rem, 11.8vw, 3.45rem);
+    max-width: 10.2ch;
+  }
+
+  .button {
+    font-size: 0.94rem;
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "LabFlow",
+  "short_name": "LabFlow",
+  "description": "Terminal-first workflow control for local-first execution.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#041004",
+  "theme_color": "#081008",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

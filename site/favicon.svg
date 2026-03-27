@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#071407"/>
+      <stop offset="100%" stop-color="#0c220c"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="url(#g)"/>
+  <rect x="18" y="18" width="220" height="220" rx="44" fill="none" stroke="#66ff66" stroke-opacity=".45" stroke-width="4"/>
+  <text x="50%" y="56%" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="88" fill="#66ff66" filter="url(#glow)">LF</text>
+</svg>

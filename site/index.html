@@ -4,12 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LabFlow — Terminal-First Workflow Control</title>
-  <meta name="description" content="LabFlow is a terminal-first workflow system for local tasks, sessions, memory, status, and doctor checks." />
+  <meta name="description" content="LabFlow is a terminal-first workflow system for local-first tasks, sessions, memory, status, and doctor checks." />
   <meta name="theme-color" content="#081008" />
   <meta property="og:title" content="LabFlow — Terminal-First Workflow Control" />
   <meta property="og:description" content="Six stable commands. Local workspace state. Proof-aware execution." />
   <meta property="og:type" content="website" />
   <link rel="stylesheet" href="./styles.css" />
+
+  <link rel="canonical" href="https://labflowdevelopment.com/" />
+  <meta property="og:title" content="LabFlow — Terminal-first workflow control" />
+  <meta property="og:description" content="Get started fast with a local-first terminal workflow for tasks, sessions, memory, status, and doctor checks." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://labflowdevelopment.com/" />
+  <meta property="og:image" content="https://labflowdevelopment.com/og-image.svg" />
+  <meta property="og:image:alt" content="LabFlow retro terminal preview image" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LabFlow — Terminal-first workflow control" />
+  <meta name="twitter:description" content="Get started fast with a local-first terminal workflow for tasks, sessions, memory, status, and doctor checks." />
+  <meta name="twitter:image" content="https://labflowdevelopment.com/og-image.svg" />
+  <meta name="application-name" content="LabFlow" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LabFlow" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="mask-icon" href="/icon.svg" color="#66ff66" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -34,7 +53,7 @@
         <nav id="site-nav" class="nav" aria-label="Primary">
           <a href="#current-truth">Current truth</a>
           <a href="#commands">Commands</a>
-          <a href="#start">Start</a>
+          <a href="#start">Get started</a>
           <a href="#deploy">Deploy</a>
           <a href="https://github.com/MerverliPy/LabFlow" target="_blank" rel="noreferrer" class="nav__cta">GitHub</a>
         </nav>
@@ -54,15 +73,16 @@
               <span class="glow">Ship with signal.</span>
             </h1>
             <p class="hero__lede">
-              LabFlow turns workflow sprawl into a controlled terminal surface for tasks,
-              sessions, memory, status, and doctor checks. Built around the real repo entry
+              LabFlow gives you a terminal-first control surface for tasks, sessions,
+              memory, status, and doctor checks. Built around the real repo entry
               points, it stays aligned with the product you actually ship.
             </p>
 
             <div class="hero__actions">
-              <a href="https://github.com/MerverliPy/LabFlow" target="_blank" rel="noreferrer" class="button button--primary">Open GitHub repo</a>
-              <a href="https://github.com/MerverliPy/LabFlow/releases" target="_blank" rel="noreferrer" class="button button--ghost">View releases</a>
+              <a href="#start" class="button button--primary">Get started</a>
+              <a href="https://github.com/MerverliPy/LabFlow" target="_blank" rel="noreferrer" class="button button--ghost">Open GitHub repo</a>
             </div>
+            <p class="hero__subcta">Need release artifacts? <a href="https://github.com/MerverliPy/LabFlow/releases" target="_blank" rel="noreferrer">View releases</a>.</p>
 
             <div class="hero__chips" aria-label="Product traits">
               <span>Six stable commands</span>
@@ -186,58 +206,145 @@
         </div>
       </section>
 
+      
       <section id="commands" class="section section--grid">
         <div class="container">
           <div class="section__heading reveal">
             <div>
-              <p class="section__kicker">Core command surface</p>
+              <p class="section__kicker">Core commands</p>
               <h2>Six commands. One coherent workflow.</h2>
             </div>
             <p>
-              This section stays tightly aligned to the repo’s stable core so the homepage
-              supports the CLI instead of competing with it.
+              Each command below shows what it does and gives visitors a real
+              command they can copy immediately.
             </p>
           </div>
 
-          <div class="command-grid">
-            <article class="command-card reveal"><h3>init</h3><p>Bootstrap or repair workspace state so the system starts cleanly.</p></article>
-            <article class="command-card reveal"><h3>task</h3><p>Manage lightweight tasks without dragging users into dashboard overhead.</p></article>
-            <article class="command-card reveal"><h3>session</h3><p>Track active work sessions and retain useful history for continuity.</p></article>
-            <article class="command-card reveal"><h3>memory</h3><p>Keep local notes and tags available for later execution context.</p></article>
-            <article class="command-card reveal"><h3>status</h3><p>Expose workspace health, schema state, and proof visibility clearly.</p></article>
-            <article class="command-card reveal"><h3>doctor</h3><p>Check environment basics and drift so issues surface before they spread.</p></article>
+          <div class="command-grid command-grid--enhanced">
+            <article class="command-card reveal">
+              <h3>init</h3>
+              <p>Bootstrap or repair workspace state so the system starts cleanly.</p>
+              <pre class="command-example"><code>pnpm exec labflow init</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy="pnpm exec labflow init">Copy command</button>
+              </div>
+            </article>
+
+            <article class="command-card reveal">
+              <h3>task</h3>
+              <p>Create lightweight tasks without jumping into dashboard overhead.</p>
+              <pre class="command-example"><code>pnpm exec labflow task add "Ship release hardening"</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy='pnpm exec labflow task add "Ship release hardening"'>Copy command</button>
+              </div>
+            </article>
+
+            <article class="command-card reveal">
+              <h3>session</h3>
+              <p>Track active work sessions and keep useful continuity around them.</p>
+              <pre class="command-example"><code>pnpm exec labflow session start</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy="pnpm exec labflow session start">Copy command</button>
+              </div>
+            </article>
+
+            <article class="command-card reveal">
+              <h3>memory</h3>
+              <p>Store local notes and execution context for later retrieval.</p>
+              <pre class="command-example"><code>pnpm exec labflow memory append "Capture release notes before publish"</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy='pnpm exec labflow memory append "Capture release notes before publish"'>Copy command</button>
+              </div>
+            </article>
+
+            <article class="command-card reveal">
+              <h3>status</h3>
+              <p>Expose workspace health, schema state, and proof visibility.</p>
+              <pre class="command-example"><code>pnpm exec labflow status --json</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy="pnpm exec labflow status --json">Copy command</button>
+              </div>
+            </article>
+
+            <article class="command-card reveal">
+              <h3>doctor</h3>
+              <p>Surface environmental drift before it turns into wasted time.</p>
+              <pre class="command-example"><code>pnpm exec labflow doctor --json</code></pre>
+              <div class="command-card__footer">
+                <button class="copy-button" type="button" data-copy="pnpm exec labflow doctor --json">Copy command</button>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
+      
       <section id="start" class="section">
-        <div class="container proof-grid">
-          <article class="card reveal">
-            <p class="section__kicker">Start locally</p>
-            <h2>First commands visitors can actually use</h2>
-            <div class="code-panel" aria-label="Build and verification commands">
-              <pre><code>pnpm install
-pnpm validate:manifest
-pnpm generate:docs
-pnpm verify:generated-docs
-pnpm build
-pnpm test
-pnpm proof:verify
-pnpm check:shell
-pnpm release:readiness</code></pre>
+        <div class="container">
+          <div class="section__heading reveal">
+            <div>
+              <p class="section__kicker">Get started</p>
+              <h2>Start in 60 seconds</h2>
             </div>
-          </article>
+            <p>
+              This section gives visitors a straight path from landing page to first
+              real command, with copy buttons on every step.
+            </p>
+          </div>
 
-          <article class="card reveal">
-            <p class="section__kicker">Local CLI usage</p>
-            <h2>Then move into the command surface</h2>
-            <div class="code-panel" aria-label="Local CLI usage commands">
-              <pre><code>pnpm exec labflow --help
+          <div class="start-grid">
+            <article class="card reveal">
+              <p class="section__kicker">Step 1</p>
+              <h3>Clone and install</h3>
+              <div class="copy-card">
+                <div class="copy-card__toolbar">
+                  <span>Repository setup</span>
+                  <button class="copy-button" type="button" data-copy="git clone git@github.com:MerverliPy/LabFlow.git
+cd LabFlow
+pnpm install">Copy</button>
+                </div>
+                <pre><code>git clone git@github.com:MerverliPy/LabFlow.git
+cd LabFlow
+pnpm install</code></pre>
+              </div>
+
+              <p class="section__kicker" style="margin-top:1.25rem;">Step 2</p>
+              <h3>Build and verify</h3>
+              <div class="copy-card">
+                <div class="copy-card__toolbar">
+                  <span>Baseline checks</span>
+                  <button class="copy-button" type="button" data-copy="pnpm build
+pnpm test
+pnpm proof:verify">Copy</button>
+                </div>
+                <pre><code>pnpm build
+pnpm test
+pnpm proof:verify</code></pre>
+              </div>
+            </article>
+
+            <article class="card reveal">
+              <p class="section__kicker">Step 3</p>
+              <h3>Enter the command surface</h3>
+              <div class="copy-card">
+                <div class="copy-card__toolbar">
+                  <span>First real commands</span>
+                  <button class="copy-button" type="button" data-copy="pnpm exec labflow --help
 pnpm exec labflow init
-pnpm exec labflow task add "Ship release hardening"
+pnpm exec labflow status --json">Copy</button>
+                </div>
+                <pre><code>pnpm exec labflow --help
+pnpm exec labflow init
 pnpm exec labflow status --json</code></pre>
-            </div>
-          </article>
+              </div>
+
+              <ul class="checklist checklist--spaced">
+                <li>The first block gets the repo onto the machine.</li>
+                <li>The second block checks that the basics are healthy.</li>
+                <li>The third block gets the visitor into real LabFlow behavior immediately.</li>
+              </ul>
+            </article>
+          </div>
         </div>
       </section>
 

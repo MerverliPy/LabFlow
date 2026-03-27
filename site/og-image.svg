@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1">
+      <stop offset="0%" stop-color="#031003"/>
+      <stop offset="100%" stop-color="#082108"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.2" cy="0.2" r="1">
+      <stop offset="0%" stop-color="#3cff5f" stop-opacity=".28"/>
+      <stop offset="100%" stop-color="#3cff5f" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="70" y="70" width="170" height="170" rx="36" fill="#071607" stroke="#66ff66" stroke-opacity=".42" stroke-width="4"/>
+  <text x="155" y="172" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="82" fill="#66ff66">LF</text>
+
+  <text x="290" y="145" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="54" letter-spacing="7" fill="#eef9ee">LABFLOW</text>
+  <text x="290" y="220" font-family="Courier New, monospace" font-size="32" fill="#a7dca7">terminal-first workflow control</text>
+
+  <text x="70" y="360" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="92" fill="#eef9ee">Build in the dark.</text>
+  <text x="70" y="455" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="92" fill="#66ff66">Ship with signal.</text>
+
+  <text x="70" y="535" font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#d2e9d2">
+    Local-first tasks, sessions, memory, status, and doctor checks.
+  </text>
+</svg>

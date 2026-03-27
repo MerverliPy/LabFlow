@@ -112,3 +112,28 @@ if ('IntersectionObserver' in window) {
 } else {
   revealTargets.forEach((el) => el.classList.add('is-visible'));
 }
+
+
+// CONVERSION UPGRADE PACK
+(function () {
+  const copyButtons = document.querySelectorAll("[data-copy]");
+  if (!copyButtons.length) return;
+
+  copyButtons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      const text = button.getAttribute("data-copy") || "";
+      const original = button.textContent || "Copy";
+      try {
+        await navigator.clipboard.writeText(text);
+        button.textContent = "Copied";
+        button.classList.add("is-copied");
+      } catch (err) {
+        button.textContent = "Failed";
+      }
+      window.setTimeout(() => {
+        button.textContent = original;
+        button.classList.remove("is-copied");
+      }, 1400);
+    });
+  });
+})();

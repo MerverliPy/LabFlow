@@ -1,7 +1,11 @@
 {
   "model": "sonnet",
   "effortLevel": "medium",
+  "permissions": {
+    "defaultMode": "plan"
+  },
   "enabledPlugins": {
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "labflow-claude-pack@labflow-tools": true
   }
 }

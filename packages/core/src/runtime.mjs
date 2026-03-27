@@ -6,9 +6,9 @@ function normalizeMainPath(filePath, cwd = process.cwd()) {
 
   let normalized = filePath;
   const isWindowsDrivePath = /^[A-Za-z]:[\\/]/.test(normalized);
-  const isPosixAbsolutePath = normalized.startsWith('/');
+  const isRootedAbsolutePath = /^[\\/]/.test(normalized);
 
-  if (!isWindowsDrivePath && !isPosixAbsolutePath) {
+  if (!isWindowsDrivePath && !isRootedAbsolutePath) {
     normalized = path.resolve(cwd, normalized);
   }
 

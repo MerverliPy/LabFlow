@@ -4,15 +4,15 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "node --check src/index.mjs",
+    "build": "node --check src/runtime.mjs && node --check src/index.mjs",
     "typecheck": "echo typecheck-core",
-    "test": "node --input-type=module -e \"import('./src/index.mjs').then((m) => { if (!m.CORE_PHASE || !m.CORE_SCOPE || !m.findRepoRoot || !m.resolveManifest) process.exit(1); console.log('core exports ok'); })\""
+    "test": "node --test test/runtime.test.mjs && node --input-type=module -e \"import('./src/index.mjs').then((m) => { if (!m.CORE_PHASE || !m.CORE_SCOPE || !m.findRepoRoot || !m.resolveManifest) process.exit(1); console.log('core exports ok'); })\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MerverliPy/LabFlow.git"
   },
-  "homepage": "https://2b7e628c-labflow.calvinbrady8.workers.dev",
+  "homepage": "https://github.com/MerverliPy/LabFlow",
   "bugs": {
     "url": "https://github.com/MerverliPy/LabFlow/issues"
   }
